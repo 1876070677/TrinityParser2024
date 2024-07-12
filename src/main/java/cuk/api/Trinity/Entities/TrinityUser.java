@@ -17,7 +17,7 @@ public class TrinityUser implements Serializable {
     private String _csrf;
     private String trinityId;
     private String password;
-    private String cookies;
+    private String cookies = "";
     private Role role;
 
     // 트리니티 실제 정보

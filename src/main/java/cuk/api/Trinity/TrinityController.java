@@ -52,9 +52,6 @@ public class TrinityController {
         SecurityTrinityUser securityTrinityUser = (SecurityTrinityUser) authentication.getPrincipal();
         TrinityUser trinityUser = securityTrinityUser.getUser();
 
-        System.out.println(trinityUser.toString());
-
-
         SujtResponse sujtResponse = trinityService.getSujtNo(trinityUser, subjtNoRequest);
 
         resp.setStatus(HttpStatus.OK);

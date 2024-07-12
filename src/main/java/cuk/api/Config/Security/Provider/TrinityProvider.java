@@ -30,6 +30,9 @@ public class TrinityProvider implements AuthenticationProvider {
         try {
             TrinityUser trinityUser = trinityService.login(loginRequest);
             trinityUser.setRole(Role.MEMBER);
+            // 보안을 위해 아이디와 패스워드는 제거
+            trinityUser.setTrinityId("");
+            trinityUser.setPassword("");
             securityTrinityUser.setUser(trinityUser);
 
         } catch (Exception e) {

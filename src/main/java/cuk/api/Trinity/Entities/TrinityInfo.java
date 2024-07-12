@@ -12,9 +12,7 @@ public class TrinityInfo implements Serializable {
     private String userNm;
     private String userNo;
     private String deptNm;
-    private String handNo;
     private String campFg;
-    private String email;
 
     private String shtmFg;
     private String shtmYyyy;
@@ -23,9 +21,7 @@ public class TrinityInfo implements Serializable {
         this.userNm = obj.get("userNm").toString();
         this.userNo = obj.get("userNo").toString();
         this.deptNm = obj.get("deptNm").toString();
-        this.handNo = obj.get("handNo").toString();
         this.campFg = obj.get("campFg").toString();
-        this.email = obj.get("email").toString();
     }
 
     public void setSchoolInfo(JSONObject obj) {

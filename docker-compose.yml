@@ -1,0 +1,35 @@
+version: '3'
+services:
+  redis:
+    container_name: trinity-redis
+    image: redis:latest
+    ports:
+      - 6379:6379
+    networks:
+      - gajang-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 9002-9003:8080
+    depends_on:
+      - redis
+    networks:
+      - gajang-net
+
+  backend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 9005-9006:8080
+    depends_on:
+      - redis
+    networks:
+      - gajang-net
+
+networks:
+  gajang-net:
+    driver: bridge

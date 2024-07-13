@@ -18,21 +18,25 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Array;
 import java.net.CookieManager;
+import java.net.CookieStore;
 import java.net.HttpCookie;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class TrinityRepository {
     private final OkHttpClient client;
-    private final CookieManager cookieManager;
     private final JSONParser parser;
     private final static String BASE_PATH = "https://uportal.catholic.ac.kr";
     @Autowired
-    public TrinityRepository(OkHttpClient okHttpClient, JSONParser parser, CookieManager cookieManager) {
+    public TrinityRepository(OkHttpClient okHttpClient, JSONParser parser) {
         this.client = okHttpClient;
         this.parser = parser;
-        this.cookieManager = cookieManager;
     }
 
     public TrinityUser loginForm(TrinityUser trinityUser) throws Exception {
@@ -113,12 +117,6 @@ public class TrinityRepository {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                List<HttpCookie> cookies = cookieManager.getCookieStore().getCookies();
-
-                for (HttpCookie cookie : cookies) {
-                    trinityUser.addCookie(cookie.toString()+";");
-                }
-
                 Document document = Jsoup.parse(response.body().string());
                 Elements body = document.getElementsByTag("meta");
                 for (Element element : body) {
@@ -232,7 +230,6 @@ public class TrinityRepository {
                 .addHeader("Host", "uportal.catholic.ac.kr")
                 .addHeader("Origin", "https://uportal.catholic.ac.kr")
                 .addHeader("Referer", "https://uportal.catholic.ac.kr/stw/scsr/ssco/sscoSemesterGradesInq.do")
-                .addHeader("Cookie", trinityUser.getCookies())
                 .post(formBody)
                 .build();
         GradesResponse gradesResponse = new GradesResponse();
@@ -284,7 +281,6 @@ public class TrinityRepository {
                 .addHeader("Host", "uportal.catholic.ac.kr")
                 .addHeader("Origin", "https://uportal.catholic.ac.kr")
                 .addHeader("Referer", "https://uportal.catholic.ac.kr/stw/scsr/scoo/scooOpsbOpenSubjectInq.do")
-                .addHeader("Cookie", trinityUser.getCookies())
                 .post(formBody)
                 .build();
         SujtResponse sujtResponse = new SujtResponse();

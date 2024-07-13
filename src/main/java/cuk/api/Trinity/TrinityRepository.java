@@ -6,6 +6,7 @@ import cuk.api.Trinity.Entities.TrinityUser;
 import cuk.api.Trinity.Request.SubjtNoRequest;
 import cuk.api.Trinity.Response.GradesResponse;
 import cuk.api.Trinity.Response.SujtResponse;
+import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import okhttp3.MediaType;
 import org.json.simple.JSONArray;
@@ -15,29 +16,15 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Array;
 import java.net.CookieManager;
-import java.net.CookieStore;
-import java.net.HttpCookie;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class TrinityRepository {
     private final OkHttpClient client;
     private final JSONParser parser;
     private final static String BASE_PATH = "https://uportal.catholic.ac.kr";
-    @Autowired
-    public TrinityRepository(OkHttpClient okHttpClient, JSONParser parser) {
-        this.client = okHttpClient;
-        this.parser = parser;
-    }
 
     public TrinityUser loginForm(TrinityUser trinityUser) throws Exception {
         Request request = new Request.Builder()

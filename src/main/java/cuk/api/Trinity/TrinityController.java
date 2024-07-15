@@ -21,6 +21,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/trinity/auth")
 @Api(tags = "트리니티 관련 기능")
+@CrossOrigin(origins="*")
 public class TrinityController {
     private final TrinityService trinityService;
 

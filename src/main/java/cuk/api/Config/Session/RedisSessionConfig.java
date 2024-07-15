@@ -13,6 +13,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.session.web.http.*;
 
 @Configuration
 @EnableRedisHttpSession
@@ -34,5 +35,20 @@ public class RedisSessionConfig {
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;
+    }
+
+    @Bean
+    public CookieSerializer cookieSerializer() {
+        DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
+
+        // 쿠키 설정
+        cookieSerializer.setCookiePath("/");
+        cookieSerializer.setCookieName("SESSION");
+        cookieSerializer.setDomainName("localhost");
+        cookieSerializer.setUseSecureCookie(true);
+        cookieSerializer.setUseHttpOnlyCookie(true);
+        cookieSerializer.setSameSite("None");
+
+        return cookieSerializer;
     }
 }

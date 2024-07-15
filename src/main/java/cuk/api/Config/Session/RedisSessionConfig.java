@@ -44,7 +44,6 @@ public class RedisSessionConfig {
         // 쿠키 설정
         cookieSerializer.setCookiePath("/");
         cookieSerializer.setCookieName("SESSION");
-        cookieSerializer.setDomainName("localhost");
         cookieSerializer.setUseSecureCookie(true);
         cookieSerializer.setUseHttpOnlyCookie(true);
         cookieSerializer.setSameSite("None");

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 @Api(tags="테스트 기능")
 @Controller
+@CrossOrigin(origins="*")
 public class WelcomeController {
     @ApiOperation("서버 테스트")
     @GetMapping("/")

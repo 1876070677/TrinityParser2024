@@ -40,6 +40,7 @@ public class TrinitySecurityConfig {
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
+                .cors().disable()
                 .headers().disable()
                 .httpBasic().disable()
                 .formLogin().disable()

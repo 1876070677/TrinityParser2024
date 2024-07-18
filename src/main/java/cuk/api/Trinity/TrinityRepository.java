@@ -419,6 +419,16 @@ public class TrinityRepository {
     }
 
     public void logout(TrinityUser trinityUser) throws Exception {
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+
+        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .cookieJar(javaNetCookieJar)
+                .followRedirects(true)
+                .build();
+
         TrinityInfo info = trinityUser.getTrinityInfo();
         RequestBody formBody = new FormBody.Builder()
                 .add("_csrf", trinityUser.get_csrf())
@@ -436,7 +446,7 @@ public class TrinityRepository {
                 .post(formBody)
                 .build();
 
-        try (Response response = client.newCall(request).execute()){
+        try (Response response = httpClient.newCall(request).execute()){
             // empty block
             ;
         } catch (NullPointerException e) {

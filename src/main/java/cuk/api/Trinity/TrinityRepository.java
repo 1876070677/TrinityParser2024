@@ -17,24 +17,72 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
-import java.net.CookieManager;
+
+import java.net.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class TrinityRepository {
-    private final OkHttpClient client;
     private final JSONParser parser;
     private final static String BASE_PATH = "https://uportal.catholic.ac.kr";
 
+    public JavaNetCookieJar getCookieJar(CookieManager cookieManager, TrinityUser trinityUser) {
+        CookieStore cookieStore = cookieManager.getCookieStore();
+
+        for (Map.Entry<String, HashMap<String, Object>> entry : trinityUser.getCookies().entrySet()) {
+            String cookieName = entry.getKey();
+            HashMap<String, Object> cookieMap = entry.getValue();
+            HttpCookie cookie = new HttpCookie(cookieName, (String) cookieMap.get("value"));
+            cookie.setDomain((String) cookieMap.get("domain"));
+            cookie.setPath((String) cookieMap.get("path"));
+            cookie.setMaxAge((long) cookieMap.get("maxAge"));
+            cookie.setSecure((boolean) cookieMap.get("secure"));
+            cookie.setHttpOnly((boolean) cookieMap.get("httpOnly"));
+            cookieStore.add(URI.create((String) cookieMap.get("domain") + (String) cookieMap.get("path")), cookie);
+        }
+
+        JavaNetCookieJar javaNetCookieJar = new JavaNetCookieJar(cookieManager);
+        return javaNetCookieJar;
+    }
+
+    public void updateCookies(CookieStore cookieStore, TrinityUser trinityUser) {
+        List<HttpCookie> cookies = cookieStore.getCookies();
+        for (HttpCookie cookie : cookies) {
+            HashMap<String, Object> cookieMap = new HashMap<>();
+            cookieMap.put("value", cookie.getValue());
+            cookieMap.put("domain", cookie.getDomain());
+            cookieMap.put("path", cookie.getPath());
+            cookieMap.put("maxAge", cookie.getMaxAge());
+            cookieMap.put("secure", cookie.getSecure());
+            cookieMap.put("httpOnly", cookie.isHttpOnly());
+            trinityUser.addCookie(cookie.getName(), cookieMap);
+        }
+    }
+
     public TrinityUser loginForm(TrinityUser trinityUser) throws Exception {
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+
+        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .cookieJar(javaNetCookieJar)
+                .followRedirects(true)
+                .build();
+
         Request request = new Request.Builder()
                 .url(BASE_PATH + "/sso/jsp/sso/ip/login_form.jsp")
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0")
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = httpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
+                updateCookies(cookieManager.getCookieStore(), trinityUser);
+
                 Document document = Jsoup.parse(response.body().string());
                 Elements body = document.getElementsByTag("input");
                 for (Element element : body) {
@@ -54,6 +102,16 @@ public class TrinityRepository {
     }
 
     public TrinityUser auth(TrinityUser trinityUser) throws Exception {
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+
+        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .cookieJar(javaNetCookieJar)
+                .followRedirects(true)
+                .build();
+
         RequestBody formBody = new FormBody.Builder()
                 .add("userId", trinityUser.getTrinityId())
                 .add("password", trinityUser.getPassword())
@@ -67,8 +125,10 @@ public class TrinityRepository {
                 .post(formBody)
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = httpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
+                updateCookies(cookieManager.getCookieStore(), trinityUser);
+
                 Document document = Jsoup.parse(response.body().string());
                 Elements body = document.getElementsByTag("input");
                 for (Element element : body) {
@@ -88,6 +148,16 @@ public class TrinityRepository {
     }
 
     public TrinityUser login(TrinityUser trinityUser) throws Exception {
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+
+        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .cookieJar(javaNetCookieJar)
+                .followRedirects(true)
+                .build();
+
         RequestBody formBody = new FormBody.Builder()
                 .add("SAMLResponse", trinityUser.getSAMLResponse())
                 .build();
@@ -102,8 +172,10 @@ public class TrinityRepository {
                 .post(formBody)
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = httpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
+                updateCookies(cookieManager.getCookieStore(), trinityUser);
+
                 Document document = Jsoup.parse(response.body().string());
                 Elements body = document.getElementsByTag("meta");
                 for (Element element : body) {
@@ -123,6 +195,16 @@ public class TrinityRepository {
     }
 
     public TrinityUser getUserInfo(TrinityUser trinityUser) throws Exception {
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+
+        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .cookieJar(javaNetCookieJar)
+                .followRedirects(true)
+                .build();
+
         RequestBody emptyBody = RequestBody.create("", MediaType.parse("application/json"));
         Request request = new Request.Builder()
                 .url("https://uportal.catholic.ac.kr/portal/menu/myInformation.ajax")
@@ -138,8 +220,11 @@ public class TrinityRepository {
                 .addHeader("Referer", "https://uportal.catholic.ac.kr/portal/main.do")
                 .post(emptyBody)
                 .build();
-        try (Response response = client.newCall(request).execute()) {
+
+        try (Response response = httpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
+                updateCookies(cookieManager.getCookieStore(), trinityUser);
+
                 JSONObject data = (JSONObject) parser.parse(response.body().string());
 
                 JSONObject modelAndView = (JSONObject) data.get("modelAndView");
@@ -160,6 +245,16 @@ public class TrinityRepository {
     }
 
     public TrinityUser getSchoolInfo(TrinityUser trinityUser) throws Exception {
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+
+        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .cookieJar(javaNetCookieJar)
+                .followRedirects(true)
+                .build();
+
         RequestBody emptyBody = RequestBody.create("", MediaType.parse("application/json"));
         Request request = new Request.Builder()
                 .url("https://uportal.catholic.ac.kr/portal/portlet/P044/shtmData.ajax")
@@ -175,8 +270,11 @@ public class TrinityRepository {
                 .addHeader("Referer", "https://uportal.catholic.ac.kr/portal/main.do")
                 .post(emptyBody)
                 .build();
-        try (Response response = client.newCall(request).execute()) {
+
+        try (Response response = httpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
+                updateCookies(cookieManager.getCookieStore(), trinityUser);
+
                 JSONObject data = (JSONObject) parser.parse(response.body().string());
 
                 JSONObject modelAndView = (JSONObject) data.get("modelAndView");
@@ -197,6 +295,16 @@ public class TrinityRepository {
     }
 
     public GradesResponse getGrades(TrinityUser trinityUser) throws Exception {
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+
+        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .cookieJar(javaNetCookieJar)
+                .followRedirects(true)
+                .build();
+
         TrinityInfo info = trinityUser.getTrinityInfo();
         RequestBody formBody = new FormBody.Builder()
                 .add("campFg", info.getCampFg())
@@ -219,9 +327,11 @@ public class TrinityRepository {
                 .addHeader("Referer", "https://uportal.catholic.ac.kr/stw/scsr/ssco/sscoSemesterGradesInq.do")
                 .post(formBody)
                 .build();
+
         GradesResponse gradesResponse = new GradesResponse();
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = httpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
+                updateCookies(cookieManager.getCookieStore(), trinityUser);
 
                 JSONObject data = (JSONObject) parser.parse(response.body().string());
 
@@ -244,6 +354,16 @@ public class TrinityRepository {
     }
 
     public SujtResponse getSujtNo(TrinityUser trinityUser, SubjtNoRequest subjtNoRequest) throws Exception {
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+
+        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .cookieJar(javaNetCookieJar)
+                .followRedirects(true)
+                .build();
+
         TrinityInfo info = trinityUser.getTrinityInfo();
         RequestBody formBody = new FormBody.Builder()
                 .add("quatFg", "INQ")
@@ -270,9 +390,12 @@ public class TrinityRepository {
                 .addHeader("Referer", "https://uportal.catholic.ac.kr/stw/scsr/scoo/scooOpsbOpenSubjectInq.do")
                 .post(formBody)
                 .build();
+
         SujtResponse sujtResponse = new SujtResponse();
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = httpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
+                updateCookies(cookieManager.getCookieStore(), trinityUser);
+
                 JSONObject data = (JSONObject) parser.parse(response.body().string());
 
                 JSONArray subjects = (JSONArray) data.get("DS_CURR_OPSB010");

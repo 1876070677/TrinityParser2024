@@ -418,4 +418,32 @@ public class TrinityRepository {
 
         return sujtResponse;
     }
+
+    public void logout(TrinityUser trinityUser) throws Exception {
+        TrinityInfo info = trinityUser.getTrinityInfo();
+        RequestBody formBody = new FormBody.Builder()
+                .add("_csrf", trinityUser.get_csrf())
+                .build();
+        Request request = new Request.Builder()
+                .url("https://uportal.catholic.ac.kr/portal/login/logout.do")
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0")
+                .addHeader("Accept", "application/json, text/javascript, */*; q=0.01")
+                .addHeader("Content-type", "application/x-www-form-urlencoded")
+                .addHeader("Accept-Encoding", "gzip, deflate, br, zstd")
+                .addHeader("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7")
+                .addHeader("Host", "uportal.catholic.ac.kr")
+                .addHeader("Origin", "https://uportal.catholic.ac.kr")
+                .addHeader("Referer", "https://uportal.catholic.ac.kr/portal/main.do")
+                .post(formBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()){
+            // empty block
+            ;
+        } catch (NullPointerException e) {
+            throw new Exception("Request 헤더 또는 바디에 필요한 정보가 담겨있지 않습니다.");
+        } catch (Exception e) {
+            throw new Exception("Request Failed");
+        }
+    }
 }

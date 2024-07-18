@@ -9,7 +9,9 @@ import cuk.api.Config.Security.Handler.LoginFailureHandler;
 import cuk.api.Config.Security.Handler.LoginSuccessHandler;
 import cuk.api.Config.Security.Provider.TrinityProvider;
 import cuk.api.Trinity.Entities.Role;
+import cuk.api.Trinity.TrinityService;
 import lombok.RequiredArgsConstructor;
+import okhttp3.OkHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -32,6 +34,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class TrinitySecurityConfig {
     private final ObjectMapper objectMapper;
     private final TrinityProvider trinityProvider;
+    private final TrinityService trinityService;
 
     @Bean
     public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
@@ -90,7 +93,7 @@ public class TrinitySecurityConfig {
 
     @Bean
     public JSONLogoutHandler jsonLogoutHandler() {
-        return new JSONLogoutHandler(objectMapper);
+        return new JSONLogoutHandler(objectMapper, trinityService);
     }
 
     @Bean

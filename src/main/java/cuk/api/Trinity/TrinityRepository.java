@@ -26,7 +26,6 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class TrinityRepository {
-    private final OkHttpClient client;
     private final JSONParser parser;
     private final static String BASE_PATH = "https://uportal.catholic.ac.kr";
 

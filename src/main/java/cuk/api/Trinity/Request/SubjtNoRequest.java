@@ -10,4 +10,9 @@ public class SubjtNoRequest {
     private String sujtNo;
     @NotBlank
     private String classNo;
+
+    public SubjtNoRequest(String sujtNo, String classNo) {
+        this.sujtNo = sujtNo;
+        this.classNo = classNo;
+    }
 }

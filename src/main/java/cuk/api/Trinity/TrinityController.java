@@ -30,6 +30,15 @@ public class TrinityController {
         this.trinityService = trinityService;
     }
 
+    @GetMapping("/authorize")
+    @ApiOperation("로그인 여부 확인")
+    public ResponseEntity<ResponseMessage> isAuthorized() {
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setStatus(HttpStatus.OK);
+        responseMessage.setMessage("Success");
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+    }
+
     @GetMapping("/grade")
     @ApiOperation("세션 정보 토대로 금학기 성적 조회, 비공개여도 받아올 수 있음")
     public ResponseEntity<ResponseMessage> getGrades() throws Exception{
@@ -45,13 +54,16 @@ public class TrinityController {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-    @PostMapping("/sujtNo")
-    public ResponseEntity<ResponseMessage> getSujtNo(@RequestBody @Valid SubjtNoRequest subjtNoRequest) throws Exception{
+    @GetMapping("/sujtInq")
+    @ApiOperation("현재 수강 신청 인원 확인")
+    public ResponseEntity<ResponseMessage> getSujtNo(@RequestParam String sujtNo, @RequestParam String classNo) throws Exception{
         ResponseMessage resp = new ResponseMessage();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityTrinityUser securityTrinityUser = (SecurityTrinityUser) authentication.getPrincipal();
         TrinityUser trinityUser = securityTrinityUser.getUser();
+
+        SubjtNoRequest subjtNoRequest = new SubjtNoRequest(sujtNo, classNo);
 
         SujtResponse sujtResponse = trinityService.getSujtNo(trinityUser, subjtNoRequest);
 

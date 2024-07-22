@@ -111,6 +111,7 @@ public class TrinitySecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:5173");
         configuration.addAllowedOrigin("https://localhost:5173");
+        configuration.addAllowedOrigin("https://parser.dobby.kr");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);

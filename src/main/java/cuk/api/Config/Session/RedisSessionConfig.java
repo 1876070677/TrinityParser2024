@@ -46,7 +46,7 @@ public class RedisSessionConfig {
         cookieSerializer.setCookieName("SESSION");
         cookieSerializer.setUseSecureCookie(true);
         cookieSerializer.setUseHttpOnlyCookie(true);
-        cookieSerializer.setSameSite("None");
+        cookieSerializer.setSameSite("Lax");
 
         return cookieSerializer;
     }

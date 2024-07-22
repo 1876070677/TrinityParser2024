@@ -18,6 +18,14 @@ services:
       - redis
     networks:
       - gajang-net
+    
+  frontend:
+    build:
+      context: ./frontend
+    networks:
+      - gajang-net
+    ports:
+      - 5173:5173
 
   backend-dev:
     build:

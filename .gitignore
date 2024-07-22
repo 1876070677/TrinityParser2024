@@ -146,3 +146,31 @@ hs_err_pid*
 replay_pid*
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java
+
+# Logs
+TrinityParserFrontend/logs
+TrinityParserFrontend/*.log
+TrinityParserFrontend/npm-debug.log*
+TrinityParserFrontend/yarn-debug.log*
+TrinityParserFrontend/yarn-error.log*
+TrinityParserFrontend/pnpm-debug.log*
+TrinityParserFrontend/lerna-debug.log*
+
+TrinityParserFrontend/node_modules
+TrinityParserFrontend/dist
+TrinityParserFrontend/dist-ssr
+TrinityParserFrontend/*.local
+
+# Editor directories and files
+TrinityParserFrontend/.vscode/*
+TrinityParserFrontend/!.vscode/extensions.json
+TrinityParserFrontend/.idea
+TrinityParserFrontend/.DS_Store
+TrinityParserFrontend/TrinityParserFrontend/*.suo
+TrinityParserFrontend/*.ntvs*
+TrinityParserFrontend/*.njsproj
+TrinityParserFrontend/*.sln
+TrinityParserFrontend/*.sw?
+
+TrinityParserFrontend/.env
+TrinityParserFrontend/.pem

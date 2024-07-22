@@ -46,7 +46,6 @@ public class RedisSessionConfig {
         cookieSerializer.setCookieName("SESSION");
         cookieSerializer.setUseSecureCookie(true);
         // 배포할 때는 도메인 설정 변경해주세요.
-        cookieSerializer.setDomainName("localhost");
 //        cookieSerializer.setDomainNamePattern("^.+?\\.(\\w+\\.[a-z]+)$");
         cookieSerializer.setUseHttpOnlyCookie(true);
         cookieSerializer.setSameSite("None");

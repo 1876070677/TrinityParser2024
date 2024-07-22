@@ -46,7 +46,6 @@ public class RedisSessionConfig {
         cookieSerializer.setCookieName("SESSION");
         cookieSerializer.setUseSecureCookie(true);
         cookieSerializer.setUseHttpOnlyCookie(true);
-        cookieSerializer.setDomainName(".dobby.kr");
         cookieSerializer.setSameSite("None");
 
         return cookieSerializer;

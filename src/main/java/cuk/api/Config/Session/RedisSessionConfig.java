@@ -45,6 +45,7 @@ public class RedisSessionConfig {
         cookieSerializer.setCookiePath("/");
         cookieSerializer.setCookieName("SESSION");
         cookieSerializer.setUseSecureCookie(true);
+        cookieSerializer.setDomainNamePattern("^.+?\\.(\\w+\\.[a-z]+)$");
         cookieSerializer.setUseHttpOnlyCookie(true);
         cookieSerializer.setSameSite("None");
 

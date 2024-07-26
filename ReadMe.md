@@ -1,5 +1,8 @@
 # TrinityParser API
 
+## 배포 완료!!
+https://dobby123.notion.site/CUKProject001-TrinityParser-940036c8dd7f47438b9b82cc0894ca90?pvs=4
+
 ## TrinityParser API Docs
 with Swagger:
 https://trinity.dobby.kr/swagger-ui/index.html

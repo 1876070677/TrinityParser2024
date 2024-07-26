@@ -62,23 +62,12 @@ public class TrinityRepository {
         }
     }
 
-    public TrinityUser loginForm(TrinityUser trinityUser) throws Exception {
-        CookieManager cookieManager = new CookieManager();
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-
-        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
-
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .cookieJar(javaNetCookieJar)
-                .followRedirects(true)
-                .build();
-
+    public TrinityUser loginForm(TrinityUser trinityUser, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
         Request request = new Request.Builder()
                 .url(BASE_PATH + "/sso/jsp/sso/ip/login_form.jsp")
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0")
                 .build();
-
         try (Response response = httpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 updateCookies(cookieManager.getCookieStore(), trinityUser);
@@ -101,17 +90,7 @@ public class TrinityRepository {
         return trinityUser;
     }
 
-    public TrinityUser auth(TrinityUser trinityUser) throws Exception {
-        CookieManager cookieManager = new CookieManager();
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-
-        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
-
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .cookieJar(javaNetCookieJar)
-                .followRedirects(true)
-                .build();
-
+    public TrinityUser auth(TrinityUser trinityUser, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
         RequestBody formBody = new FormBody.Builder()
                 .add("userId", trinityUser.getTrinityId())
                 .add("password", trinityUser.getPassword())
@@ -147,16 +126,7 @@ public class TrinityRepository {
         return trinityUser;
     }
 
-    public TrinityUser login(TrinityUser trinityUser) throws Exception {
-        CookieManager cookieManager = new CookieManager();
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-
-        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
-
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .cookieJar(javaNetCookieJar)
-                .followRedirects(true)
-                .build();
+    public TrinityUser login(TrinityUser trinityUser, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
 
         RequestBody formBody = new FormBody.Builder()
                 .add("SAMLResponse", trinityUser.getSAMLResponse())
@@ -194,17 +164,7 @@ public class TrinityRepository {
         return trinityUser;
     }
 
-    public TrinityUser getUserInfo(TrinityUser trinityUser) throws Exception {
-        CookieManager cookieManager = new CookieManager();
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-
-        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
-
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .cookieJar(javaNetCookieJar)
-                .followRedirects(true)
-                .build();
-
+    public TrinityUser getUserInfo(TrinityUser trinityUser, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
         RequestBody emptyBody = RequestBody.create("", MediaType.parse("application/json"));
         Request request = new Request.Builder()
                 .url("https://uportal.catholic.ac.kr/portal/menu/myInformation.ajax")
@@ -244,17 +204,7 @@ public class TrinityRepository {
         return trinityUser;
     }
 
-    public TrinityUser getSchoolInfo(TrinityUser trinityUser) throws Exception {
-        CookieManager cookieManager = new CookieManager();
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-
-        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
-
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .cookieJar(javaNetCookieJar)
-                .followRedirects(true)
-                .build();
-
+    public TrinityUser getSchoolInfo(TrinityUser trinityUser, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
         RequestBody emptyBody = RequestBody.create("", MediaType.parse("application/json"));
         Request request = new Request.Builder()
                 .url("https://uportal.catholic.ac.kr/portal/portlet/P044/shtmData.ajax")

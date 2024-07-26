@@ -5,30 +5,51 @@ import cuk.api.Trinity.Request.LoginRequest;
 import cuk.api.Trinity.Request.SubjtNoRequest;
 import cuk.api.Trinity.Response.GradesResponse;
 import cuk.api.Trinity.Response.SujtResponse;
+import lombok.RequiredArgsConstructor;
+import okhttp3.JavaNetCookieJar;
+import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 
 @Service
 public class TrinityService {
     private final TrinityRepository trinityRepository;
+    private final RedisTemplate<String, Integer> counterRedisTemplate;
+    private final String REQUEST_CNT_KEY = "req_cnt";
 
     @Autowired
-    public TrinityService(TrinityRepository trinityRepository) {
+    public TrinityService(TrinityRepository trinityRepository, RedisTemplate<String, Integer> counterRedisTemplate) {
         this.trinityRepository = trinityRepository;
+        this.counterRedisTemplate = counterRedisTemplate;
     }
     public TrinityUser login(LoginRequest loginRequest) throws Exception{
+
         TrinityUser trinityUser = new TrinityUser(loginRequest);
 
-        trinityUser = trinityRepository.loginForm(trinityUser);
+        // Re-use OkHttpClient
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 
-        trinityUser = trinityRepository.auth(trinityUser);
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .cookieJar(new JavaNetCookieJar(cookieManager))
+                .followRedirects(true)
+                .build();
 
-        trinityUser = trinityRepository.login(trinityUser);
+        trinityUser = trinityRepository.loginForm(trinityUser, cookieManager, httpClient);
 
-        trinityUser = trinityRepository.getUserInfo(trinityUser);
+        trinityUser = trinityRepository.auth(trinityUser, cookieManager, httpClient);
 
-        trinityUser = trinityRepository.getSchoolInfo(trinityUser);
+        trinityUser = trinityRepository.login(trinityUser, cookieManager, httpClient);
 
+        trinityUser = trinityRepository.getUserInfo(trinityUser, cookieManager, httpClient);
+
+        trinityUser = trinityRepository.getSchoolInfo(trinityUser, cookieManager, httpClient);
+
+        counterRedisTemplate.opsForValue().increment(REQUEST_CNT_KEY, 1);
         return trinityUser;
     }
 

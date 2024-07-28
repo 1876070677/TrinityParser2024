@@ -40,6 +40,8 @@ public class ManagementController {
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setStatus(HttpStatus.OK);
         responseMessage.setMessage("Success");
+
+        managementService.setConfig(configRequest);
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 }

@@ -1,5 +1,7 @@
 package cuk.api.Trinity;
 
+import cuk.api.Management.ManagementService;
+import cuk.api.Trinity.Entities.TrinityInfo;
 import cuk.api.Trinity.Entities.TrinityUser;
 import cuk.api.Trinity.Request.LoginRequest;
 import cuk.api.Trinity.Request.SubjtNoRequest;
@@ -18,13 +20,12 @@ import java.net.CookiePolicy;
 @Service
 public class TrinityService {
     private final TrinityRepository trinityRepository;
-    private final RedisTemplate<String, Integer> counterRedisTemplate;
-    private final String REQUEST_CNT_KEY = "req_cnt";
+    private final ManagementService managementService;
 
     @Autowired
-    public TrinityService(TrinityRepository trinityRepository, RedisTemplate<String, Integer> counterRedisTemplate) {
+    public TrinityService(TrinityRepository trinityRepository, ManagementService managementService) {
         this.trinityRepository = trinityRepository;
-        this.counterRedisTemplate = counterRedisTemplate;
+        this.managementService = managementService;
     }
     public TrinityUser login(LoginRequest loginRequest) throws Exception{
 
@@ -49,7 +50,15 @@ public class TrinityService {
 
         trinityUser = trinityRepository.getSchoolInfo(trinityUser, cookieManager, httpClient);
 
-        counterRedisTemplate.opsForValue().increment(REQUEST_CNT_KEY, 1);
+        // increment of login count
+        managementService.incrementReqCount();
+
+        // set shtm and yyyy
+        TrinityInfo info = trinityUser.getTrinityInfo();
+        info.setShtm(managementService.getShtm());
+        info.setYyyy(managementService.getYyyy());
+
+        trinityUser.setTrinityInfo(info);
         return trinityUser;
     }
 

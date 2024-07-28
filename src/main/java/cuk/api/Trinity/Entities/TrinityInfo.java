@@ -17,6 +17,9 @@ public class TrinityInfo implements Serializable {
     private String shtmFg;
     private String shtmYyyy;
 
+    private String shtm;
+    private String Yyyy;
+
     public void setTrinityInfo(JSONObject obj) {
         this.userNm = obj.get("userNm").toString();
         this.userNo = obj.get("userNo").toString();

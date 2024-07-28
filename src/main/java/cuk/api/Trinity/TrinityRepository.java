@@ -16,6 +16,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.net.*;
@@ -323,9 +324,9 @@ public class TrinityRepository {
         }
         RequestBody formBody = new FormBody.Builder()
                 .add("quatFg", "INQ")
-                .add("posiFg", info.getShtmFg())
-                .add("openYyyy", info.getShtmYyyy())
-                .add("openShtm", info.getShtmFg())
+                .add("posiFg", info.getShtm())
+                .add("openYyyy", info.getYyyy())
+                .add("openShtm", info.getShtm())
                 .add("campFg", info.getCampFg())
                 .add("sustCd", "%")
                 .add("corsCd", "|")

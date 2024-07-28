@@ -39,9 +39,20 @@ public class RedisSessionConfig {
 
     @Bean
     public RedisTemplate<String, Integer> counterRedisTemplate() {
-        RedisTemplate<String, Integer> redisTemplate = new RedisTemplate<>();
+        RedisTemplate<String, Integer> redisTemplate;
+        redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        return redisTemplate;
+    }
+
+    @Bean
+    public RedisTemplate<String, String> configRedisTemplate() {
+        RedisTemplate<String, String> redisTemplate;
+        redisTemplate = new RedisTemplate<>();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;
     }

@@ -4,6 +4,7 @@ import cuk.api.Management.Request.ConfigRequest;
 import cuk.api.ResponseEntities.ResponseMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class ManagementController {
     }
 
     @PostMapping("/configure")
-    @ApiOperation("학기, 연도 설정")
+    @ApiOperation(value = "학기, 연도 등록", hidden = true)
     public ResponseEntity<ResponseMessage> setConfigure(@RequestBody @Valid ConfigRequest configRequest) throws Exception {
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setStatus(HttpStatus.OK);

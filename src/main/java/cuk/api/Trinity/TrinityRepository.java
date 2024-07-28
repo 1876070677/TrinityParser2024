@@ -319,9 +319,7 @@ public class TrinityRepository {
                 .build();
 
         TrinityInfo info = trinityUser.getTrinityInfo();
-        if (info.getShtmFg() == null) {
-            throw new Exception("휴학생 또는 졸업생의 경우, 조회가 불가능합니다.");
-        }
+
         RequestBody formBody = new FormBody.Builder()
                 .add("quatFg", "INQ")
                 .add("posiFg", info.getShtm())

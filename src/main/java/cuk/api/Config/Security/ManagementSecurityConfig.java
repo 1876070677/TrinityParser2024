@@ -83,7 +83,7 @@ public class ManagementSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSourceInManagement() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("https://admin.dobby.kr");
+        configuration.addAllowedOrigin("https://trinity.dobby.kr");
         configuration.addAllowedOrigin("http://localhost:5173");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");

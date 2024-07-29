@@ -34,7 +34,7 @@ public class ManagementController {
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
-    @PostMapping("/configure")
+    @PostMapping("/auth/configure")
     @ApiOperation(value = "학기, 연도 등록")
     public ResponseEntity<ResponseMessage> setConfigure(@RequestBody @Valid ConfigRequest configRequest) throws Exception {
         ResponseMessage responseMessage = new ResponseMessage();

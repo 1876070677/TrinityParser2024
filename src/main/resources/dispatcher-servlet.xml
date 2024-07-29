@@ -22,4 +22,5 @@
     <mvc:resources mapping="/swagger-ui/**" location="classpath:/META-INF/resources/webjars/springfox-swagger-ui/"/>
     <mvc:view-controller path="/swagger-ui/" view-name="forward:/swagger-ui/index.html"/>
     <mvc:resources mapping="index.html" location="classpath:/META-INF/resources/webjars/springfox-swagger-ui/"/>
+    <mvc:resources mapping="/admin/**" location="/WEB-INF/admin/"/>
 </beans>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Admin Page</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script type='text/javascript' src="/admin/main.js"></script>
+    </head>
+    <body>
+        <div class="message-wrapper">
+            message: <span id="message"></span><br><br>
+        </div>
+        <div class="login-wrapper">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="text" name="id" >
+                <input type="password" name="password">
+                <button type="button" onclick="clickLogin()">Log in</button>
+                <button type="button" onclick="clickLogout()">Logout</button>
+            </form>
+        </div>
+        <div class="config-wrapper">
+            <h2>Configure</h2>
+            <form id="configForm">
+                <input type="text" name="shtm" >
+                <input type="password" name="yyyy">
+                <button type="button" onclick="clickConfig()">Config</button>
+            </form>
+        </div>
+        <div class="reqcnt-wrapper">
+            <h2>Request Count</h2>
+            누적 사용자 수: <span id="reqcntValue"></span><br><br>
+            <button type="button" onclick="clickReqcnt()">누적 사용자 수 확인</button>
+        </div>
+    </body>
+</html>

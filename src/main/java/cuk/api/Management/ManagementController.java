@@ -20,7 +20,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/manage")
 @RequiredArgsConstructor
-@Api(tags = "API 관련 정보 제공, API 명세를 아는 분들에게 특별 기능")
+@Api(tags = "관리 기능 (Admin만 접근 가능)")
 public class ManagementController {
     private final ManagementService managementService;
 

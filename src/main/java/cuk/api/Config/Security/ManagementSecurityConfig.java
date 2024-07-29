@@ -39,7 +39,7 @@ public class ManagementSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
         http
-                .antMatcher("/manage/**")
+                .antMatcher("/manage/auth/**")
                 .authorizeRequests()
                 .antMatchers("/**").hasRole(Role.ADMIN.getRoleWithoutPrefix())
                 .antMatchers("/login", "/logout").permitAll()
@@ -52,7 +52,7 @@ public class ManagementSecurityConfig {
                 .formLogin().disable()
                 .rememberMe().disable()
                 .addFilterBefore(managementLoginFilter(), UsernamePasswordAuthenticationFilter.class)
-                .logout().logoutUrl("/manage/logout")
+                .logout().logoutUrl("/manage/auth/logout")
                 .logoutSuccessHandler(managementLogoutHandler())
                 .and()
                 .exceptionHandling()
@@ -84,6 +84,7 @@ public class ManagementSecurityConfig {
     public CorsConfigurationSource corsConfigurationSourceInManagement() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("https://admin.dobby.kr");
+        configuration.addAllowedOrigin("http://localhost:5173");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);

@@ -67,7 +67,19 @@ public class TrinityService {
     }
 
     public SujtResponse getSujtNo(TrinityUser trinityUser, SubjtNoRequest subjtNoRequest) throws Exception {
-        return trinityRepository.getSujtNo(trinityUser, subjtNoRequest);
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+
+        JavaNetCookieJar javaNetCookieJar = trinityRepository.getCookieJar(cookieManager, trinityUser);
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .cookieJar(javaNetCookieJar)
+                .followRedirects(true)
+                .build();
+
+        SujtResponse sujtResponse = trinityRepository.getSujtNo(trinityUser, subjtNoRequest, cookieManager, httpClient);
+        sujtResponse = trinityRepository.getRemainNo(trinityUser, sujtResponse, cookieManager, httpClient);
+        return sujtResponse;
     }
 
     public void logout(TrinityUser trinityUser) throws Exception {

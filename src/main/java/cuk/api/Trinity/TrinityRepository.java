@@ -309,16 +309,7 @@ public class TrinityRepository {
         return gradesResponse;
     }
 
-    public SujtResponse getSujtNo(TrinityUser trinityUser, SubjtNoRequest subjtNoRequest) throws Exception {
-        CookieManager cookieManager = new CookieManager();
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-
-        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
-
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .cookieJar(javaNetCookieJar)
-                .followRedirects(true)
-                .build();
+    public SujtResponse getSujtNo(TrinityUser trinityUser, SubjtNoRequest subjtNoRequest, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
 
         TrinityInfo info = trinityUser.getTrinityInfo();
 
@@ -382,16 +373,7 @@ public class TrinityRepository {
         return sujtResponse;
     }
 
-    public SujtResponse getRemainNo(TrinityUser trinityUser, SujtResponse sujtResponse) throws Exception {
-        CookieManager cookieManager = new CookieManager();
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-
-        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
-
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .cookieJar(javaNetCookieJar)
-                .followRedirects(true)
-                .build();
+    public SujtResponse getRemainNo(TrinityUser trinityUser, SujtResponse sujtResponse, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
 
         TrinityInfo info = trinityUser.getTrinityInfo();
 

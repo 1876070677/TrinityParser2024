@@ -412,6 +412,7 @@ public class TrinityRepository {
                     JSONObject subject = (JSONObject) obj;
                     if (subject.get("sbjtNo").equals(sujtResponse.getSujtNo()) && subject.get("clssNo").equals(sujtResponse.getClassNo())) {
                         sujtResponse.setExtraCnt(subject.get("extraCnt").toString());
+                        break;
                     }
                 }
             }

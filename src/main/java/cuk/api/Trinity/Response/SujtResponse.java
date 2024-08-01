@@ -8,7 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SujtResponse {
+    String sujtNo;
+    String classNo;
     String tlsnAplyRcnt;
     String tlsnLmtRcnt;
     String sbjtKorNm;
+    String sustCd;
+    String extraCnt;
 }

@@ -67,7 +67,9 @@ public class TrinityService {
     }
 
     public SujtResponse getSujtNo(TrinityUser trinityUser, SubjtNoRequest subjtNoRequest) throws Exception {
-        return trinityRepository.getSujtNo(trinityUser, subjtNoRequest);
+        SujtResponse sujtResponse = trinityRepository.getSujtNo(trinityUser, subjtNoRequest);
+        sujtResponse = trinityRepository.getRemainNo(trinityUser, sujtResponse);
+        return sujtResponse;
     }
 
     public void logout(TrinityUser trinityUser) throws Exception {

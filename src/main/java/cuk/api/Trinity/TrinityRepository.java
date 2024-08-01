@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.System.*;
+
 @Component
 @RequiredArgsConstructor
 public class TrinityRepository {
@@ -360,6 +362,9 @@ public class TrinityRepository {
                         sujtResponse.setTlsnAplyRcnt(subject.get("tlsnAplyRcnt").toString());
                         sujtResponse.setTlsnLmtRcnt(subject.get("tlsnLmtRcnt").toString());
                         sujtResponse.setSbjtKorNm(subject.get("sbjtKorNm").toString());
+                        sujtResponse.setSustCd(subject.get("sustCd").toString());
+                        sujtResponse.setSujtNo(subjtNoRequest.getSujtNo());
+                        sujtResponse.setClassNo(subjtNoRequest.getClassNo());
                         break;
                     }
                 }
@@ -374,6 +379,63 @@ public class TrinityRepository {
             throw new Exception(e.getMessage());
         }
 
+        return sujtResponse;
+    }
+
+    public SujtResponse getRemainNo(TrinityUser trinityUser, SujtResponse sujtResponse) throws Exception {
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+
+        JavaNetCookieJar javaNetCookieJar = getCookieJar(cookieManager, trinityUser);
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .cookieJar(javaNetCookieJar)
+                .followRedirects(true)
+                .build();
+
+        TrinityInfo info = trinityUser.getTrinityInfo();
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("posiFg", "10")
+                .add("openYyyy", info.getYyyy())
+                .add("openShtm", info.getShtm())
+                .add("sustCd", sujtResponse.getSustCd())
+                .add("corsCd", "")
+                .add("majCd", "%")
+                .add("grade", "%")
+                .build();
+        Request request = new Request.Builder()
+                .url("https://uportal.catholic.ac.kr/stw/scsr/scoo/findTalaLessonApplicationOpsb.json")
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0")
+                .addHeader("Accept", "application/json, text/javascript, */*; q=0.01")
+                .addHeader("Content-type", "application/x-www-form-urlencoded")
+                .addHeader("x-csrf-token", trinityUser.get_csrf())
+                .addHeader("x-requested-with", "XMLHttpRequest")
+                .addHeader("Accept-Encoding", "gzip, deflate, br, zstd")
+                .addHeader("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7")
+                .addHeader("Host", "uportal.catholic.ac.kr")
+                .addHeader("Origin", "https://uportal.catholic.ac.kr")
+                .addHeader("Referer", "https://uportal.catholic.ac.kr/stw/scsr/scoo/scooLessonApplicationStudentReg.do")
+                .post(formBody)
+                .build();
+
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                updateCookies(cookieManager.getCookieStore(), trinityUser);
+
+                JSONObject data = (JSONObject) parser.parse(response.body().string());
+
+                JSONArray subjects = (JSONArray) data.get("DS_COUR_TALA010");
+                for (Object obj : subjects) {
+                    JSONObject subject = (JSONObject) obj;
+                    if (subject.get("sbjtNo").equals(sujtResponse.getSujtNo()) && subject.get("clssNo").equals(sujtResponse.getClassNo())) {
+                        sujtResponse.setExtraCnt(subject.get("extraCnt").toString());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
         return sujtResponse;
     }
 

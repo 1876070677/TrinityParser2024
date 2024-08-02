@@ -369,7 +369,6 @@ public class TrinityRepository {
                 }
             }
         } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
             throw new Exception("Request 헤더 또는 바디에 필요한 정보가 담겨있지 않습니다.");
         } catch (Exception e) {
             throw new Exception(e.getMessage());

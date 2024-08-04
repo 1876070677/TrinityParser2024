@@ -59,6 +59,10 @@ public class TrinityService {
         info.setYyyy(managementService.getYyyy());
 
         trinityUser.setTrinityInfo(info);
+
+        trinityRepository.clientClear(httpClient);
+        httpClient = null;
+
         return trinityUser;
     }
 
@@ -79,6 +83,10 @@ public class TrinityService {
 
         SujtResponse sujtResponse = trinityRepository.getSujtNo(trinityUser, subjtNoRequest, cookieManager, httpClient);
         sujtResponse = trinityRepository.getRemainNo(trinityUser, sujtResponse, cookieManager, httpClient);
+
+        trinityRepository.clientClear(httpClient);
+        httpClient = null;
+
         return sujtResponse;
     }
 

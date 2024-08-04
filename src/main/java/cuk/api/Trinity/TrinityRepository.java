@@ -65,6 +65,11 @@ public class TrinityRepository {
         }
     }
 
+    public void clientClear(OkHttpClient client) {
+        client.connectionPool().evictAll();
+        client.dispatcher().executorService().shutdown();
+    }
+
     public TrinityUser loginForm(TrinityUser trinityUser, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
         Request request = new Request.Builder()
                 .url(BASE_PATH + "/sso/jsp/sso/ip/login_form.jsp")
@@ -304,6 +309,9 @@ public class TrinityRepository {
             throw new Exception("Request 헤더 또는 바디에 필요한 정보가 담겨있지 않습니다.");
         } catch (Exception e) {
             throw new Exception(e.getMessage());
+        } finally {
+            clientClear(httpClient);
+            httpClient = null;
         }
 
         return gradesResponse;
@@ -461,6 +469,9 @@ public class TrinityRepository {
             throw new Exception("Request 헤더 또는 바디에 필요한 정보가 담겨있지 않습니다.");
         } catch (Exception e) {
             throw new Exception("Request Failed");
+        } finally {
+            clientClear(httpClient);
+            httpClient = null;
         }
     }
 }

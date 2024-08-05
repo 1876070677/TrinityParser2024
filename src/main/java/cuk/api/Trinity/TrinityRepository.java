@@ -65,6 +65,11 @@ public class TrinityRepository {
         }
     }
 
+    public void clientClear(OkHttpClient client) {
+        client.connectionPool().evictAll();
+        client.dispatcher().executorService().shutdown();
+    }
+
     public TrinityUser loginForm(TrinityUser trinityUser, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
         Request request = new Request.Builder()
                 .url(BASE_PATH + "/sso/jsp/sso/ip/login_form.jsp")
@@ -304,6 +309,9 @@ public class TrinityRepository {
             throw new Exception("Request 헤더 또는 바디에 필요한 정보가 담겨있지 않습니다.");
         } catch (Exception e) {
             throw new Exception(e.getMessage());
+        } finally {
+            clientClear(httpClient);
+            httpClient = null;
         }
 
         return gradesResponse;
@@ -312,12 +320,12 @@ public class TrinityRepository {
     public SujtResponse getSujtNo(TrinityUser trinityUser, SubjtNoRequest subjtNoRequest, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
 
         TrinityInfo info = trinityUser.getTrinityInfo();
-
         RequestBody formBody = new FormBody.Builder()
                 .add("quatFg", "INQ")
                 .add("posiFg", info.getShtm())
                 .add("openYyyy", info.getYyyy())
                 .add("openShtm", info.getShtm())
+                .add("campFg", info.getCampFg())
                 .add("campFg", info.getCampFg())
                 .add("sustCd", "%")
                 .add("corsCd", "|")
@@ -351,7 +359,11 @@ public class TrinityRepository {
                     JSONObject subject = (JSONObject) obj;
                     if (subject.get("sbjtNo").equals(subjtNoRequest.getSujtNo()) && subject.get("clssNo").equals(subjtNoRequest.getClassNo())) {
                         sujtResponse.setTlsnAplyRcnt(subject.get("tlsnAplyRcnt").toString());
-                        sujtResponse.setTlsnLmtRcnt(subject.get("tlsnLmtRcnt").toString());
+                        try {
+                            sujtResponse.setTlsnLmtRcnt(subject.get("tlsnLmtRcnt").toString());
+                        } catch (NullPointerException e) {
+                            sujtResponse.setTlsnLmtRcnt("-");
+                        }
                         sujtResponse.setSbjtKorNm(subject.get("sbjtKorNm").toString());
                         sujtResponse.setSustCd(subject.get("sustCd").toString());
                         sujtResponse.setSujtNo(subjtNoRequest.getSujtNo());
@@ -457,6 +469,9 @@ public class TrinityRepository {
             throw new Exception("Request 헤더 또는 바디에 필요한 정보가 담겨있지 않습니다.");
         } catch (Exception e) {
             throw new Exception("Request Failed");
+        } finally {
+            clientClear(httpClient);
+            httpClient = null;
         }
     }
 }

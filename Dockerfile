@@ -4,6 +4,7 @@ RUN ["rm", "/etc/localtime"]
 RUN ["ln", "-sf", "/usr/share/zoneinfo/Asia/Seoul", "/etc/localtime"]
 
 COPY ./target/TrinityParser-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+COPY ./TomcatENV/setenv.sh /usr/local/tomcat/bin/
 
 #start tomcat
 CMD ["/usr/local/tomcat/bin/catalina.sh", "run"]

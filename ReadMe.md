@@ -14,6 +14,11 @@ https://dobby123.notion.site/TrinityParser-API-Document-40991a604ec94f349261b288
 
 login, logout은 Spring security에 의해 관리되므로 Swagger에 보이지 않습니다. 해당 기능은 Notion을 참고해주세요.
 
+## 사용법
+모든 내용은 "배포 완료!!" 부분의 노션 페이지에서 확인가능합니다.
+1) 수강 신청 현황 확인: https://dobby123.notion.site/66be1006c023483d97dc2e06c66db5b9
+2) 금학기 성적 조회: https://dobby123.notion.site/812cc79673f3477cad1d4eb6fe64022a
+
 # Setting
 1. src/main/resources/config/database.properties 파일을 생성해주세요.
 2. 아래와 같이 작성해주세요

@@ -8,6 +8,16 @@ services:
     networks:
       - gajang-net
 
+  mysql:
+    container_name: trinity-mysql
+    image: mysql:8.0.30
+    volumes:
+      - ./db/conf.d:/etc/mysql/conf.d
+      - ./db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
+    env_file: ./db/.env
+
   backend:
     build:
       context: .
@@ -16,6 +26,7 @@ services:
       - 9002-9003:8080
     depends_on:
       - redis
+      - mysql
     networks:
       - gajang-net
     

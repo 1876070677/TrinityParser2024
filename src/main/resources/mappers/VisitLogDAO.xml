@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cuk.api.VisitLog.VisitLogDAO">
+    <select id="getVisitLogs" resultType="cuk.api.VisitLog.Entities.VisitLog">
+        select id, context, DATE_FORMAT(created_time, "%Y-%m-%d %h:%i:%s") as created_time, visible, likes
+        from VisitLog
+        <if test="cursor == 0">
+            order by created_time desc limit 15;
+        </if>
+        <if test="cursor != 0">
+            where id &lt; #{cursor} order by created_time desc limit 15;
+        </if>
+    </select>
+
+    <select id="createVisitLog">
+        insert into VisitLog(context) values(#{context});
+    </select>
+</mapper>

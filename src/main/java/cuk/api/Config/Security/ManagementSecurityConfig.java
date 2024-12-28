@@ -21,10 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -44,7 +41,6 @@ public class ManagementSecurityConfig {
         http
                 .antMatcher("/manage/auth/**")
                 .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/**").hasRole(Role.ADMIN.getRoleWithoutPrefix())
                 .antMatchers("/login", "/logout").permitAll()
                 .anyRequest().authenticated()
@@ -90,7 +86,7 @@ public class ManagementSecurityConfig {
         configuration.addAllowedOrigin("https://trinity.dobby.kr");
         configuration.addAllowedOrigin("http://localhost:5173");
         configuration.addAllowedHeader("*");
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS", "PUT"));
+        configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

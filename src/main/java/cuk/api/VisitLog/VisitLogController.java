@@ -56,9 +56,10 @@ public class VisitLogController {
         resp.setStatus(HttpStatus.OK);
         resp.setMessage("Success");
 
-        if (createRequest.getContext().length() < 200)
+        if (createRequest.getContext().length() > 200)
             throw new RuntimeException("Context Length Is Too Large");
-
+        else if (createRequest.getContext().isEmpty() || createRequest.getContext().isBlank())
+            throw new RuntimeException("Wrong Input");
         visitLogService.createVisitLog(createRequest);
 
         resp.setData(visitLogService.getVisitLogs(0));

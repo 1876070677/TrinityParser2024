@@ -15,4 +15,5 @@ public class VisitLog {
     private String created_time;
     private boolean visible;
     private int likes;
+    private int total_records;
 }

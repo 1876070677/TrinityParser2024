@@ -2,6 +2,8 @@ package cuk.api.VisitLog;
 
 import cuk.api.ResponseEntities.ResponseMessage;
 import cuk.api.VisitLog.Request.CreateRequest;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("/trinity/auth")
@@ -17,10 +20,12 @@ import java.util.Base64;
 public class VisitLogController {
 
     private VisitLogService visitLogService;
+    private RedissonClient redissonClient;
 
     @Autowired
-    public VisitLogController(VisitLogService visitLogService) {
+    public VisitLogController(VisitLogService visitLogService, RedissonClient redissonClient) {
         this.visitLogService = visitLogService;
+        this.redissonClient = redissonClient;
     }
 
     @GetMapping("/vl")
@@ -63,6 +68,30 @@ public class VisitLogController {
         visitLogService.createVisitLog(createRequest);
 
         resp.setData(visitLogService.getVisitLogs(0));
+        return new ResponseEntity<>(resp, HttpStatus.OK);
+    }
+
+    @PatchMapping("/vl/likes/{id}")
+    public ResponseEntity<ResponseMessage> incrLikes(@PathVariable("id") int id) {
+        if (id == 0)
+            throw new RuntimeException("Wrong Input");
+
+        // Lock
+        final String lockName = Integer.toString(id) + ":lock";
+        final RLock lock = redissonClient.getLock(lockName);
+        try {
+            if (lock.tryLock(1, 3, TimeUnit.SECONDS))
+                visitLogService.incrLikes(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error");
+        } finally {
+            if (lock != null && lock.isLocked())
+                lock.unlock();
+        }
+        ResponseMessage resp = new ResponseMessage();
+        resp.setStatus(HttpStatus.OK);
+        resp.setMessage("Success");
+
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 }

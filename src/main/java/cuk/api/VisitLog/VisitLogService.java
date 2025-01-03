@@ -25,4 +25,9 @@ public class VisitLogService {
     public void createVisitLog(CreateRequest createRequest) {
         visitLogDAO.createVisitLog(createRequest.getContext());
     }
+
+    @Transactional
+    public void incrLikes(int id) {
+        visitLogDAO.incrLikes(id);
+    }
 }

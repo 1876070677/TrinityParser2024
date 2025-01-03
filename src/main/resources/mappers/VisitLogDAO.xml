@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cuk.api.VisitLog.VisitLogDAO">
     <select id="getVisitLogs" resultType="cuk.api.VisitLog.Entities.VisitLog">
-        select id, context, DATE_FORMAT(created_time, "%Y-%m-%d %h:%i:%s") as created_time, visible, likes
+        select id, context, DATE_FORMAT(created_time, "%Y-%m-%d %h:%i:%s") as created_time, visible, likes, (select count(id) from VisitLog) as total_records
         from VisitLog
         <if test="cursor == 0">
             order by created_time desc limit 15;
@@ -14,5 +14,9 @@
 
     <select id="createVisitLog">
         insert into VisitLog(context) values(#{context});
+    </select>
+
+    <select id="incrLikes">
+        update VisitLog set likes = likes+1 where id=#{id} and likes &lt; 99;
     </select>
 </mapper>

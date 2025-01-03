@@ -34,7 +34,7 @@ db.password=db 사용자 비밀번호
 ```
 3. backend는 빌드를 해야합니다.
 ```shell
-mvn build
+mvn install
 ```
 # MySQL
 1. root 프로젝트에 총 3가지의 파일을 생성합니다.

@@ -11,4 +11,6 @@ public interface VisitLogDAO {
     public List<VisitLog> getVisitLogs(int cursor);
 
     public void createVisitLog(String context);
+
+    public void incrLikes(int id);
 }

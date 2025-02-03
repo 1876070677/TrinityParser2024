@@ -31,7 +31,6 @@ import static java.lang.System.*;
 public class TrinityRepository {
     private final JSONParser parser;
     private final static String BASE_PATH = "https://uportal.catholic.ac.kr";
-    private final RedisTemplate<String, String> configRedisTemplate;
 
     public JavaNetCookieJar getCookieJar(CookieManager cookieManager, TrinityUser trinityUser) {
         CookieStore cookieStore = cookieManager.getCookieStore();

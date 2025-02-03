@@ -31,6 +31,7 @@ import static java.lang.System.*;
 public class TrinityRepository {
     private final JSONParser parser;
     private final static String BASE_PATH = "https://uportal.catholic.ac.kr";
+    private final RedisTemplate<String, String> configRedisTemplate;
 
     public JavaNetCookieJar getCookieJar(CookieManager cookieManager, TrinityUser trinityUser) {
         CookieStore cookieStore = cookieManager.getCookieStore();
@@ -317,14 +318,14 @@ public class TrinityRepository {
         return gradesResponse;
     }
 
-    public SujtResponse getSujtNo(TrinityUser trinityUser, SubjtNoRequest subjtNoRequest, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
+    public SujtResponse getSujtNo(TrinityUser trinityUser, SubjtNoRequest subjtNoRequest, CookieManager cookieManager, OkHttpClient httpClient, String shtm, String yyyy) throws Exception {
 
         TrinityInfo info = trinityUser.getTrinityInfo();
         RequestBody formBody = new FormBody.Builder()
                 .add("quatFg", "INQ")
-                .add("posiFg", info.getShtm())
-                .add("openYyyy", info.getYyyy())
-                .add("openShtm", info.getShtm())
+                .add("posiFg", shtm)
+                .add("openYyyy", yyyy)
+                .add("openShtm", shtm)
                 .add("campFg", info.getCampFg())
                 .add("campFg", info.getCampFg())
                 .add("sustCd", "%")
@@ -385,14 +386,14 @@ public class TrinityRepository {
         return sujtResponse;
     }
 
-    public SujtResponse getRemainNo(TrinityUser trinityUser, SujtResponse sujtResponse, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
+    public SujtResponse getRemainNo(TrinityUser trinityUser, SujtResponse sujtResponse, CookieManager cookieManager, OkHttpClient httpClient, String shtm, String yyyy) throws Exception {
 
         TrinityInfo info = trinityUser.getTrinityInfo();
 
         RequestBody formBody = new FormBody.Builder()
                 .add("posiFg", "10")
-                .add("openYyyy", info.getYyyy())
-                .add("openShtm", info.getShtm())
+                .add("openYyyy", yyyy)
+                .add("openShtm", shtm)
                 .add("sustCd", sujtResponse.getSustCd())
                 .add("corsCd", "")
                 .add("majCd", "%")

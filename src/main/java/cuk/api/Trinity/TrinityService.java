@@ -81,8 +81,8 @@ public class TrinityService {
                 .followRedirects(true)
                 .build();
 
-        SujtResponse sujtResponse = trinityRepository.getSujtNo(trinityUser, subjtNoRequest, cookieManager, httpClient);
-        sujtResponse = trinityRepository.getRemainNo(trinityUser, sujtResponse, cookieManager, httpClient);
+        SujtResponse sujtResponse = trinityRepository.getSujtNo(trinityUser, subjtNoRequest, cookieManager, httpClient, managementService.getShtm(), managementService.getYyyy());
+        sujtResponse = trinityRepository.getRemainNo(trinityUser, sujtResponse, cookieManager, httpClient, managementService.getShtm(), managementService.getYyyy());
 
         trinityRepository.clientClear(httpClient);
         httpClient = null;

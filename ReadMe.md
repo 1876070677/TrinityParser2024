@@ -1,6 +1,6 @@
 # TrinityParser API
 
-## 24.12.29. 방명록 기능 준비중
+## 24.02.06. 방명록 기능 개발 완료
 
 ## 배포 완료!!
 https://dobby123.notion.site/CUKProject001-TrinityParser-940036c8dd7f47438b9b82cc0894ca90?pvs=4

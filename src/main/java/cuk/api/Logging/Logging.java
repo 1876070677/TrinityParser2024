@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @Component
 public class Logging {
     private final Queue<ClassInfo> task;
-    private final Path logFilePath = Paths.get("/usr/local/tomcat/webapps/logs/log.txt");
+    private final Path logFilePath = Paths.get("/usr/local/tomcat/webapps/logs/subject-query-history.txt");
 
     public Logging() {
         this.task = new ConcurrentLinkedQueue<>();

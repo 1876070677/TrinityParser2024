@@ -26,6 +26,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 9002:8080
+    volumes:
+      - ./logs:/usr/local/tomcat/webapps/logs
     depends_on:
       - redis
       - mysql

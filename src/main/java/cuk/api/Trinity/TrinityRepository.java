@@ -1,5 +1,7 @@
 package cuk.api.Trinity;
 
+import cuk.api.Logging.Logging;
+import cuk.api.Trinity.Entities.ClassInfo;
 import cuk.api.Trinity.Entities.CurrentGradeInfo;
 import cuk.api.Trinity.Entities.TrinityInfo;
 import cuk.api.Trinity.Entities.TrinityUser;
@@ -20,6 +22,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.net.*;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,7 @@ import static java.lang.System.*;
 @RequiredArgsConstructor
 public class TrinityRepository {
     private final JSONParser parser;
+    private final Logging logging;
     private final static String BASE_PATH = "https://uportal.catholic.ac.kr";
 
     public JavaNetCookieJar getCookieJar(CookieManager cookieManager, TrinityUser trinityUser) {
@@ -368,6 +372,8 @@ public class TrinityRepository {
                         sujtResponse.setSustCd(subject.get("sustCd").toString());
                         sujtResponse.setSujtNo(subjtNoRequest.getSujtNo());
                         sujtResponse.setClassNo(subjtNoRequest.getClassNo());
+
+                        logging.enqueue(new ClassInfo(LocalDateTime.now(), subject.get("sbjtKorNm").toString(), subjtNoRequest.getSujtNo(), subjtNoRequest.getClassNo()));
                         break;
                     }
                 }

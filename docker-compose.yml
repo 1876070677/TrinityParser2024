@@ -25,7 +25,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 9002-9003:8080
+      - 9002:8080
     depends_on:
       - redis
       - mysql
@@ -39,17 +39,6 @@ services:
       - gajang-net
     ports:
       - 5173:5173
-
-  backend-dev:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 9005-9006:8080
-    depends_on:
-      - redis
-    networks:
-      - gajang-net
 
 networks:
   gajang-net:

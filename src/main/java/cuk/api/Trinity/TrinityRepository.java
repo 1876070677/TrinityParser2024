@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -373,7 +374,7 @@ public class TrinityRepository {
                         sujtResponse.setSujtNo(subjtNoRequest.getSujtNo());
                         sujtResponse.setClassNo(subjtNoRequest.getClassNo());
 
-                        logging.enqueue(new ClassInfo(LocalDateTime.now(), subject.get("sbjtKorNm").toString(), subjtNoRequest.getSujtNo(), subjtNoRequest.getClassNo()));
+                        logging.enqueue(new ClassInfo(LocalDateTime.now(ZoneId.of("Asia/Seoul")), subject.get("sbjtKorNm").toString(), subjtNoRequest.getSujtNo(), subjtNoRequest.getClassNo()));
                         break;
                     }
                 }

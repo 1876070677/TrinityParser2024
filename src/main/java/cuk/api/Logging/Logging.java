@@ -1,22 +1,17 @@
 package cuk.api.Logging;
 
 import cuk.api.Trinity.Entities.ClassInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Component
 public class Logging {
     private final Queue<ClassInfo> task;
-    private final Path logFilePath = Paths.get("/usr/local/tomcat/webapps/logs/subject-query-history.txt");
+    private static final Logger logger = LoggerFactory.getLogger(Logging.class);
 
     public Logging() {
         this.task = new ConcurrentLinkedQueue<>();
@@ -26,24 +21,13 @@ public class Logging {
         task.add(info);
     }
 
-    // 주기적으로 로그 처리 (예: 5초마다)
+    // 주기적으로 로그 처리.
     @Scheduled(fixedDelay = 10000)
-    public void processQueue() throws Exception {
+    public synchronized void processQueue() throws Exception {
+        ClassInfo info;
         while (!task.isEmpty()) {
-            try (BufferedWriter writer = Files.newBufferedWriter(
-                    logFilePath,
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.APPEND)) {
-
-                ClassInfo info;
-                while ((info = task.poll()) != null) {
-                    writer.write(info.toString());
-                    writer.newLine();
-                }
-            } catch (IOException e) {
-                throw new Exception("Logging Failed!!");
-            }
+            info = task.poll();
+            logger.info(info.toString());
         }
     }
-
 }

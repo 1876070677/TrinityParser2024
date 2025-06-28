@@ -13,7 +13,9 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
+    <logger name = "cuk.api" level="INFO" />
+
+    <root level="ERROR">
         <appender-ref ref="DAILY_FILE"/>
     </root>
 

@@ -30,6 +30,9 @@ import java.util.Map;
 
 import static java.lang.System.*;
 
+/*
+    트리니티에 실제로 요청을 보내는 클래스.
+ */
 @Component
 @RequiredArgsConstructor
 public class TrinityRepository {
@@ -37,6 +40,13 @@ public class TrinityRepository {
     private final Logging logging;
     private final static String BASE_PATH = "https://uportal.catholic.ac.kr";
 
+    //@{
+    //
+    // Common 섹션.
+    //
+    /*
+        TrinityUser에 담겨있는 정보를 가지고 OkHttpClinet에 담을 쿠키를 생성.
+     */
     public JavaNetCookieJar getCookieJar(CookieManager cookieManager, TrinityUser trinityUser) {
         CookieStore cookieStore = cookieManager.getCookieStore();
 
@@ -56,6 +66,10 @@ public class TrinityRepository {
         return javaNetCookieJar;
     }
 
+    /*
+        Response로부터 받은 Cookie를 TrinityUser 객체에 저장.
+        다음 Request에 getCookieJar()을 활용해 Cookie를 실어서 보냄.
+     */
     public void updateCookies(CookieStore cookieStore, TrinityUser trinityUser) {
         List<HttpCookie> cookies = cookieStore.getCookies();
         for (HttpCookie cookie : cookies) {
@@ -70,11 +84,24 @@ public class TrinityRepository {
         }
     }
 
+    /*
+        OkHttpClinet에서 커넥션을 유지하게 되면 객체가 오래 살아있기 때문에 강제로 커넥션을 끊어줌.
+     */
     public void clientClear(OkHttpClient client) {
         client.connectionPool().evictAll();
         client.dispatcher().executorService().shutdown();
     }
+    //@}
 
+    //@{
+    //
+    // Login 섹션.
+    //
+    /*
+        로그인 과정의 첫 번째 단계.
+        로그인 폼을 불러오면서 samlRequest 정보를 가져옴.
+        samlRequest가 있어야지만, 다음 auth 과정 진행 가능.
+     */
     public TrinityUser loginForm(TrinityUser trinityUser, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
         Request request = new Request.Builder()
                 .url(BASE_PATH + "/sso/jsp/sso/ip/login_form.jsp")
@@ -103,6 +130,11 @@ public class TrinityRepository {
         return trinityUser;
     }
 
+    /*
+        사용자로부터 받은 id, password를 바탕으로 실제 로그인 진행.
+        SAMLResponse 정보를 받아옴.
+        SAMLResponse를 Request body에 실어보내야지만, 다음 Login 과정 진행 가능.
+     */
     public TrinityUser auth(TrinityUser trinityUser, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
         RequestBody formBody = new FormBody.Builder()
                 .add("userId", trinityUser.getTrinityId())
@@ -139,6 +171,10 @@ public class TrinityRepository {
         return trinityUser;
     }
 
+    /*
+        SAMLResponse를 보내고, csrf 토큰을 받아옴.
+        앞으로의 요청에서 csrf 토큰을 가지고 사용자의 요청이 유효함을 판단.
+     */
     public TrinityUser login(TrinityUser trinityUser, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
 
         RequestBody formBody = new FormBody.Builder()
@@ -176,7 +212,12 @@ public class TrinityRepository {
 
         return trinityUser;
     }
+    //@}
 
+    //@{
+    //
+    // 사용자 정보 관리 섹션.
+    //
     public TrinityUser getUserInfo(TrinityUser trinityUser, CookieManager cookieManager, OkHttpClient httpClient) throws Exception {
         RequestBody emptyBody = RequestBody.create("", MediaType.parse("application/json"));
         Request request = new Request.Builder()
@@ -257,6 +298,9 @@ public class TrinityRepository {
         return trinityUser;
     }
 
+    /*
+        성적 확인.
+     */
     public GradesResponse getGrades(TrinityUser trinityUser) throws Exception {
         CookieManager cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
@@ -321,7 +365,12 @@ public class TrinityRepository {
 
         return gradesResponse;
     }
+    //@}
 
+    /*
+        최대 수강 가능 인원.
+        현재 수강 신청 인원.
+     */
     public SujtResponse getSujtNo(TrinityUser trinityUser, SubjtNoRequest subjtNoRequest, CookieManager cookieManager, OkHttpClient httpClient, String shtm, String yyyy) throws Exception {
 
         TrinityInfo info = trinityUser.getTrinityInfo();
@@ -392,6 +441,9 @@ public class TrinityRepository {
         return sujtResponse;
     }
 
+    /*
+        여석 확인.
+     */
     public SujtResponse getRemainNo(TrinityUser trinityUser, SujtResponse sujtResponse, CookieManager cookieManager, OkHttpClient httpClient, String shtm, String yyyy) throws Exception {
 
         TrinityInfo info = trinityUser.getTrinityInfo();
@@ -441,6 +493,10 @@ public class TrinityRepository {
         return sujtResponse;
     }
 
+    //@{
+    //
+    // Logout 섹션.
+    //
     public void logout(TrinityUser trinityUser) throws Exception {
         CookieManager cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
@@ -481,4 +537,7 @@ public class TrinityRepository {
             httpClient = null;
         }
     }
+    //@}
+    
 }
+// End of TrinityRepository.java

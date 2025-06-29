@@ -297,6 +297,7 @@ public class TrinityRepository {
         }
         return trinityUser;
     }
+    //@}
 
     /*
         성적 확인.
@@ -365,7 +366,6 @@ public class TrinityRepository {
 
         return gradesResponse;
     }
-    //@}
 
     /*
         최대 수강 가능 인원.

@@ -67,6 +67,11 @@ TZ=Asia/Seoul
 ```
 4. 생성한 데이터베이스 이름에 맞게, applicationContext.xml에서 dataSource 정보를 수정합니다.
 
+# 로깅
+/usr/local/tomcat/webapps/logs/subject-query-history.{date}.log 형식으로 로그가 저장됩니다.
+이 로그 파일을 외부에서 접근할 수 있도록 하기 위해서 프로젝트 최상단에 logs 폴더를 생성하여 위의 경로와 마운트했습니다.
+따라서, 루트 폴더에서 `mkdir logs`로 logs 폴더를 생성합니다.
+
 # Docker-compose
 최초 실행 시
 ``` shell
@@ -85,7 +90,7 @@ docker-compose up -d backend // API Server
 docker-compose up -d --build backend
 ```
 
-특정 컨테이너의 scale 조정. 대신 compose.yml에서 포트가 하나 이상으로 바인딩 되어야 됨
+~특정 컨테이너의 scale 조정. 대신 compose.yml에서 포트가 하나 이상으로 바인딩 되어야 됨~
 ```shell
 docker-compose scale backend=2
 ```

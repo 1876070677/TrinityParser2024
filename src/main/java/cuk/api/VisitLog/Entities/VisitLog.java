@@ -1,5 +1,6 @@
 package cuk.api.VisitLog.Entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +12,17 @@ import lombok.Setter;
 @Setter
 public class VisitLog {
     private int id;
+
     private String context;
+
     private String created_time;
+
     private boolean visible;
+
+    @JsonProperty("isAdmin")
     private boolean isAdmin;
+
     private int likes;
+
     private int total_records;
 }

@@ -65,6 +65,7 @@ public class VisitLogController {
             throw new RuntimeException("Context Length Is Too Large");
         else if (createRequest.getContext().isEmpty() || createRequest.getContext().isBlank())
             throw new RuntimeException("Wrong Input");
+        createRequest.setAdmin(false);
         visitLogService.createVisitLog(createRequest);
 
         resp.setData(visitLogService.getVisitLogs(0));

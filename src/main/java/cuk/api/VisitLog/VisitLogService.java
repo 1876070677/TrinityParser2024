@@ -23,7 +23,7 @@ public class VisitLogService {
     }
     @Transactional
     public void createVisitLog(CreateRequest createRequest) {
-        visitLogDAO.createVisitLog(createRequest.getContext());
+        visitLogDAO.createVisitLog(createRequest);
     }
 
     @Transactional

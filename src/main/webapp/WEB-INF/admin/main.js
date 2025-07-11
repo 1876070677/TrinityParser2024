@@ -99,3 +99,32 @@ function clickReqcnt()
         }
     });
 }
+
+function clickSubmitVisitLog()
+{
+    var form = document.getElementById("visitLogForm");
+
+    let data = {
+        "context" : form.elements["context"].value
+    }
+    // console.log(data);
+    $.ajax
+    ({
+        type: "Post",
+        url: `${BASE_URL}/manage/auth/vl`,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(data),
+        xhrFields: {
+            withCredentials: true
+        },
+        success: function(data)
+        {
+            document.getElementById('message').innerText = "로그인 성공";
+        },
+        error: function()
+        {
+            document.getElementById('message').innerText = "로그인 실패";
+        }
+    });
+}

@@ -2,11 +2,10 @@ package cuk.api.Management;
 
 import cuk.api.Management.Request.ConfigRequest;
 import cuk.api.ResponseEntities.ResponseMessage;
+import cuk.api.VisitLog.Request.CreateRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -42,6 +41,17 @@ public class ManagementController {
         responseMessage.setMessage("Success");
 
         managementService.setConfig(configRequest);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+    }
+
+    @PostMapping("/auth/vl")
+    @ApiOperation(value = "관리자 방명록 등록")
+    public ResponseEntity<ResponseMessage> submitAdminVisitLog(@RequestBody @Valid CreateRequest request) throws Exception {
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setStatus(HttpStatus.OK);
+        responseMessage.setMessage("Success");
+
+        managementService.createAdminVisitLog(request);
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 }

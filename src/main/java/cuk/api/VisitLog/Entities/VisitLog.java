@@ -14,6 +14,7 @@ public class VisitLog {
     private String context;
     private String created_time;
     private boolean visible;
+    private boolean isAdmin;
     private int likes;
     private int total_records;
 }

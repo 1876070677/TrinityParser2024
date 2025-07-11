@@ -1,6 +1,8 @@
 package cuk.api.Management;
 
 import cuk.api.Management.Request.ConfigRequest;
+import cuk.api.VisitLog.Request.CreateRequest;
+import cuk.api.VisitLog.VisitLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class ManagementService {
     private final RedisTemplate<String, Integer> counterRedisTemplate;
     private final RedisTemplate<String, String> configRedisTemplate;
+    private final VisitLogService visitLogService;
 
     private final String REQUEST_CNT_KEY = "req_cnt";
     private final String SHTM = "shtm";
@@ -34,5 +37,9 @@ public class ManagementService {
 
     public String getYyyy() throws Exception{
         return configRedisTemplate.opsForValue().get(YYYY);
+    }
+
+    public void createAdminVisitLog(CreateRequest request) {
+        visitLogService.createVisitLog(request);
     }
 }

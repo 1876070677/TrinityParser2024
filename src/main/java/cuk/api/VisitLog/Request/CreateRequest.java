@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateRequest {
     private String context;
+    private boolean isAdmin;
 }

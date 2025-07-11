@@ -51,6 +51,7 @@ public class ManagementController {
         responseMessage.setStatus(HttpStatus.OK);
         responseMessage.setMessage("Success");
 
+        request.setAdmin(true);
         managementService.createAdminVisitLog(request);
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }

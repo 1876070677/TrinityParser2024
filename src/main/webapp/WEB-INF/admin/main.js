@@ -120,11 +120,11 @@ function clickSubmitVisitLog()
         },
         success: function(data)
         {
-            document.getElementById('message').innerText = "로그인 성공";
+            document.getElementById('message').innerText = "게시글 등록 성공";
         },
         error: function()
         {
-            document.getElementById('message').innerText = "로그인 실패";
+            document.getElementById('message').innerText = "게시글 등록 실패";
         }
     });
 }

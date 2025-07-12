@@ -54,6 +54,7 @@ CREATE TABLE VisitLog (
   context varchar(200) NOT NULL,
   created_time DATETIME DEFAULT CURRENT_TIMESTAMP,
   visible BOOLEAN DEFAULT 1,
+  isAdmin BOOLEAN DEFAULT 0,
   likes int DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```

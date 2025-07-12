@@ -13,17 +13,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-@Api(tags="테스트 기능")
+@Api(tags="Redirection용도")
 @Controller
 @CrossOrigin(origins="*")
 public class WelcomeController {
-    @ApiOperation("서버 테스트")
+    @ApiOperation("Redirection 용도")
     @GetMapping("/")
-    @ResponseBody
-    public ResponseEntity<ResponseMessage> welcome(HttpSession session) {
-        ResponseMessage resp = new ResponseMessage();
-        resp.setStatus(HttpStatus.OK);
-        resp.setMessage("Welcome to gajang~");
-        return new ResponseEntity<>(resp, HttpStatus.OK);
+    public String welcome() {
+        return "redirect:/fe/";
     }
 }

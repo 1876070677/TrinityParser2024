@@ -21,7 +21,10 @@
     </bean>
     <!-- react용 url 강제 매핑 -->
     <mvc:resources mapping="/fe/**" location="/WEB-INF/fe/" />
-    <mvc:view-controller path="/fe/**" view-name="forward:/fe/index.html" />
+    <mvc:view-controller path="/fe" view-name="forward:/fe/index.html" />
+    <mvc:view-controller path="/fe/login" view-name="forward:/fe/index.html" />
+    <mvc:view-controller path="/fe/sugang" view-name="forward:/fe/index.html" />
+    <mvc:view-controller path="/fe/board" view-name="forward:/fe/index.html" />
 
     <mvc:resources mapping="/swagger-ui/**" location="classpath:/META-INF/resources/webjars/springfox-swagger-ui/"/>
     <mvc:view-controller path="/swagger-ui/" view-name="forward:/swagger-ui/index.html"/>

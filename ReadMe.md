@@ -5,7 +5,12 @@
 ## 배포 완료!!
 https://dobby123.notion.site/CUKProject001-TrinityParser-940036c8dd7f47438b9b82cc0894ca90?pvs=4
 
-웹 페이지: https://parser.dobby.kr
+### 웹 페이지 주소 변경
+기존 웹 페이지: https://parser.dobby.kr
+
+변경 후: https://trinity.dobby.kr
+
+두 주소 모두 문제없이 사용가능합니다.
 
 ## TrinityParser API Docs
 with Swagger:
@@ -36,6 +41,39 @@ db.password=db 사용자 비밀번호
 ```shell
 mvn install
 ```
+
+# 리액트 기반의 프론트엔드를 빌드 후 톰캣에서 같이 배포하기
+1. 쉘 스크립트를 작성합니다.
+```
+vi ./frontend/autoBuild.sh
+```
+2. 아래와 같이 작성 후에, java 프로젝트의 webapp 하위로 들어가도록 합니다.
+```shell
+# 1. 의존성 추가
+npm install
+
+# 2. 빌드
+npm run build
+
+# 빌드 결과물 위치
+BUILD_DIR="./dist"
+
+# 타겟 경로
+TARGET_DIR="../src/main/webapp/WEB-INF/fe"
+
+# 3. 기존 폴더 삭제 후 복사
+rm -rf "$TARGET_DIR"
+mkdir -p "$TARGET_DIR"
+
+# 4. 복사
+cp -r "$BUILD_DIR/"* "$TARGET_DIR/"
+
+echo "Build completed and files moved to $TARGET_DIR"
+```
+
+3. chmod +x 명령어로 실행 가능하도록 설정합니다.
+4. ./autoBuild.sh를 실행하면, 빌드가 완료된 정적 리소스들이 자바 프로젝트 내부로 이동하고 톰캣에서 배포할 수 있습니다.
+
 # MySQL
 1. root 프로젝트에 총 3가지의 파일을 생성합니다.
    1. db/conf.d/{이름}.cnf

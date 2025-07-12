@@ -33,14 +33,6 @@ services:
       - mysql
     networks:
       - gajang-net
-    
-  frontend:
-    build:
-      context: ./frontend
-    networks:
-      - gajang-net
-    ports:
-      - 5173:5173
 
 networks:
   gajang-net:

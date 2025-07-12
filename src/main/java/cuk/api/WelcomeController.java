@@ -20,6 +20,6 @@ public class WelcomeController {
     @ApiOperation("Redirection 용도")
     @GetMapping("/")
     public String welcome() {
-        return "redirect:/fe/";
+        return "redirect:/fe";
     }
 }

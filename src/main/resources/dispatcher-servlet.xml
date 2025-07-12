@@ -20,6 +20,7 @@
         </property>
     </bean>
     <mvc:resources mapping="/fe/**" location="/WEB-INF/fe/" />
+    <mvc:view-controller path="/fe" view-name="forward:/fe/index.html" />
     <mvc:resources mapping="/swagger-ui/**" location="classpath:/META-INF/resources/webjars/springfox-swagger-ui/"/>
     <mvc:view-controller path="/swagger-ui/" view-name="forward:/swagger-ui/index.html"/>
     <mvc:resources mapping="index.html" location="classpath:/META-INF/resources/webjars/springfox-swagger-ui/"/>

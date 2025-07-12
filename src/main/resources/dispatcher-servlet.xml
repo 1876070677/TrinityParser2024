@@ -19,6 +19,11 @@
             </list>
         </property>
     </bean>
+
+    <bean class="org.springframework.web.servlet.DispatcherServlet">
+        <property name="throwExceptionIfNoHandlerFound" value="true"/>
+    </bean>
+
     <!-- react용 url 강제 매핑 -->
     <mvc:resources mapping="/fe/**" location="/WEB-INF/fe/" />
     <mvc:view-controller path="/fe" view-name="forward:/fe/index.html" />

@@ -16,9 +16,4 @@ public class ErrorHandler {
         resp.setMessage(e.getMessage());
         return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public String fallback() {
-        return "forward:/fe/index.html";
-    }
 }

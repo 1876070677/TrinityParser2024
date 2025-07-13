@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -20,6 +17,7 @@ import javax.validation.Valid;
 @RequestMapping("/manage")
 @RequiredArgsConstructor
 @Api(tags = "관리 기능 (Admin만 접근 가능)")
+@CrossOrigin(origins="*")
 public class ManagementController {
     private final ManagementService managementService;
 

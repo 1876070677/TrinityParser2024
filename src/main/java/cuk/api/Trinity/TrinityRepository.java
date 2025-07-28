@@ -427,9 +427,9 @@ public class TrinityRepository {
                     }
                 }
 
-                if (sujtResponse.getSbjtKorNm() == null) {
-                    throw new Exception("과목 코드 또는 분반이 유효하지 않습니다.");
-                }
+//                if (sujtResponse.getSbjtKorNm() == null) {
+//                    throw new Exception("과목 코드 또는 분반이 유효하지 않습니다.");
+//                }
             }
         } catch (NullPointerException e) {
             throw new Exception("Request 헤더 또는 바디에 필요한 정보가 담겨있지 않습니다.");

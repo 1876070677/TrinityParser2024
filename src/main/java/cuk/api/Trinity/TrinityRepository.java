@@ -376,10 +376,9 @@ public class TrinityRepository {
         TrinityInfo info = trinityUser.getTrinityInfo();
         RequestBody formBody = new FormBody.Builder()
                 .add("quatFg", "INQ")
-                .add("posiFg", shtm)
+                .add("posiFg", "10")
                 .add("openYyyy", yyyy)
                 .add("openShtm", shtm)
-                .add("campFg", info.getCampFg())
                 .add("campFg", info.getCampFg())
                 .add("sustCd", "%")
                 .add("corsCd", "|")
@@ -538,6 +537,6 @@ public class TrinityRepository {
         }
     }
     //@}
-    
+
 }
 // End of TrinityRepository.java

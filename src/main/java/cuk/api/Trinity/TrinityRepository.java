@@ -375,7 +375,7 @@ public class TrinityRepository {
 
         TrinityInfo info = trinityUser.getTrinityInfo();
         RequestBody formBody = new FormBody.Builder()
-                .add("quatFg", "INQ")
+                .add("quatFg", "SUST")
                 .add("posiFg", "10")
                 .add("openYyyy", yyyy)
                 .add("openShtm", shtm)

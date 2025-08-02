@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import "../styles/Grade.css";
 import { useMovePage } from '../hooks/navigator';
-import { Loader } from '../components/Loader';
 import { SyncLoader } from 'react-spinners';
 
 interface Grade {

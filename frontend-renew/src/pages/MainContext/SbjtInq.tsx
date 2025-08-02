@@ -150,7 +150,6 @@ const SbjtInq: React.FC = () => {
                     classNo: classNo,
                 }
                 if (result) {
-                    console.log(result);
                     setCurrentResult(result);
                 }
                 setIsLoading(false);

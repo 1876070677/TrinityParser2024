@@ -4,8 +4,8 @@ import { useMovePage } from '../hooks/navigator';
 import { Mode } from '../types/Main';
 import Navbar from '../components/Navbar';
 import SbjtInq from './MainContext/SbjtInq';
-import BoardPage from './BoardPage';
-import GradePage from './GradePage';
+import BoardPage from './MainContext/BoardPage';
+import GradePage from './MainContext/GradePage';
 import FnQ from './MainContext/FaQ';
 
 interface authorizeResonse {

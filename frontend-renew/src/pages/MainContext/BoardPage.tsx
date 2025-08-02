@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import '../styles/Board.css';
+import '../../styles/Board.css';
 
 interface Response {
     status: string,

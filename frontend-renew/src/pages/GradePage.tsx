@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import "../styles/Grade.css";
 import { useMovePage } from '../hooks/navigator';
 import { Loader } from '../components/Loader';
+import { SyncLoader } from 'react-spinners';
 
 interface Grade {
     details: string[];
@@ -74,7 +75,7 @@ const GradePage: React.FC = () => {
                     ? (<div className='error-wrapper'>{errorMsg}</div>)
                     : (
                         isLoading
-                        ? <Loader />
+                        ? <div style={{textAlign: "center"}}><SyncLoader size={6} color="#0C2E87" /></div>
                         : (
                             <>
                                 <thead>

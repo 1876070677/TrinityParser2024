@@ -1,0 +1,123 @@
+.guestbook-container {
+  max-width: 360px;
+  margin: 20px auto 0 auto;
+  font-family: Geologica;
+  font-size: 10px;
+  font-style: normal;
+}
+
+.guestbook-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+textarea {
+  padding: 12px 16px;
+  margin: 0 10px 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 8px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.guestbook-input{
+  width: 317px;
+  height: 50px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: none;
+}
+
+.guestbook-input:focus {
+  outline: none;
+  border-color: #0C2E87;
+}
+
+.guestbook-btn {
+  width: 100%;
+  text-align: right;
+}
+
+.guestbook-submit-btn {
+  width: 80px;
+  height: 28px;
+  color: white;
+  margin-right: 10px;
+  background-color: #0C2E87;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.guestbook-submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.entries-container {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.entry-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
+  margin: 0 10px 0 10px;
+  padding: 10px;
+  text-align: left;
+  white-space: inherit;
+  max-width: 600px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  color: #000000
+}
+
+.Admin-entry {
+  font-weight: bold;
+}
+
+.entry-id {
+  color: #888;
+}
+
+.entry-context {
+  color: #333;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.entry-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.entry-date {
+  font-size: 8px;
+  color: #666;
+}
+
+.entry-likes {
+  font-size: 8px;
+  color: #e63946;
+}
+
+.like-btn {
+  border: none;
+  background-color: white;
+}
+
+.endpage-cmt {
+  margin: 0 10px 0 10px;
+  text-align: center;
+}

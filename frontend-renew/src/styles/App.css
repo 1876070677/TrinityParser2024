@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #FAFAFA;
+  font-size: 14px;
+}
+
+img {
+  width: 36px;
+  height: 36px;
+}
+
+.imgWrapper {
+  text-align: right;
+}
+
+button {
+  cursor: pointer;
+}
+
+input:focus {
+  border-color: #0C2E87;
+  outline: none;
+  box-shadow: none;
+}

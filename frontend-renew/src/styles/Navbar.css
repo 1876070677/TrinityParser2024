@@ -1,0 +1,31 @@
+.navbar-container {
+    text-align: left;
+    display: flex
+}
+
+.navbar-container > div {
+    text-align: center;
+    margin: 0 10px 0 10px;
+    padding-bottom: 5px;
+}
+
+hr {
+    color: #CBC3C3;
+    border-width: 1px 0 0 0;
+    margin-top: 0px;
+}
+
+a {
+  text-decoration: none; /* 밑줄 없애기 */
+  color: inherit;        /* 부모 텍스트 색상 유지 */
+}
+
+a:visited {
+  color: inherit;        /* 방문 후에도 색상 유지 */
+}
+
+.tab.selected {
+  font-weight: bold;
+  color: #0C2E87; /* 선택된 탭 글씨 색상도 바꾸고 싶다면 */
+  border-bottom: 3px solid #0C2E87;
+}

@@ -21,7 +21,7 @@ interface GradeResponse {
     } | null
 }
 
-const GradePage: React.FC = () => {
+const Grade: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [grades, setGrades] = useState<Grade[]>([]);
     const [selectedGrade, setSelectedGrade] = useState<Grade | null>(null);
@@ -130,4 +130,4 @@ const GradePage: React.FC = () => {
     );
 };
 
-export default GradePage;
+export default Grade;

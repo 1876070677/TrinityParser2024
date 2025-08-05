@@ -2,7 +2,12 @@ import React, { useState, useEffect }from 'react';
 import { useMovePage } from '../hooks/navigator';
 import { SyncLoader } from "react-spinners";
 import '../styles/Login.css';
-import { VisitorResponse } from '../types/LoginTypes';
+
+interface VisitorResponse {
+  status: string;
+  message: string;
+  data: number;
+}
 
 interface Response {
   status: string,
@@ -17,7 +22,7 @@ export interface ILoginPageProps {
   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function LoginPage () {
+export default function Login () {
   const movePage = useMovePage();
 
   const [id, setId] = useState<string>('');

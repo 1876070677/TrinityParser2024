@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import "../styles/MainPage.css";
+import "../styles/Main.css";
 import { useMovePage } from '../hooks/navigator';
 import { Mode } from '../types/Main';
 import Navbar from '../components/Navbar';
 import SbjtInq from './MainContext/SbjtInq';
-import BoardPage from './MainContext/BoardPage';
-import GradePage from './MainContext/GradePage';
+import Board from './MainContext/Board';
+import Grade from './MainContext/Grade';
 import FnQ from './MainContext/FaQ';
 
 interface authorizeResonse {
@@ -18,16 +18,16 @@ interface Prop {
     mode: Mode;
 }
 
-export default function MainPage ({ mode }: Prop) {
+export default function Main ({ mode }: Prop) {
     const movePage = useMovePage();
     let Context;
 
     if (mode === 'sbjtInq') {
          Context = SbjtInq;
     } else if (mode === 'board') {
-        Context = BoardPage;
+        Context = Board;
     } else if (mode === 'grade') {
-        Context = GradePage;
+        Context = Grade;
     } else if (mode === 'faq') {
         Context = FnQ;
     }

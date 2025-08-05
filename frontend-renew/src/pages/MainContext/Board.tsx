@@ -23,7 +23,7 @@ export interface BoardEntry {
     data: BoardType[];
 }
 
-const BoardPage: React.FC = () => {
+const Board: React.FC = () => {
     const [boardList, setBoardList] = useState<BoardType[]>([]);
     const [inputValue, setInputValue] = useState<string>("");
     const [records, setRecords] = useState<number>(0);
@@ -252,4 +252,4 @@ const BoardPage: React.FC = () => {
     )
 }
 
-export default BoardPage;
+export default Board;

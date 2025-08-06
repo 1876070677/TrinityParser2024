@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import '../../styles/Board.css';
+import { Card } from "antd";
 
 interface Response {
     status: string,
@@ -229,7 +230,8 @@ const Board: React.FC = () => {
                 </form>
                 <div className="entries-container">
                     {boardList.filter((entry) => entry.visible === true).map((entry, index) => (
-                        <div key={`${entry.id} - ${index}`} className={`entry-card${entry.isAdmin ? ' Admin-entry' : ''}`}>
+                        <Card
+                        key={`${entry.id} - ${index}`} className={`entry-card${entry.isAdmin ? ' Admin-entry' : ''}`}>
                             { entry.isAdmin &&
                                <p>🛡️ 운영진</p>
                             }
@@ -240,7 +242,7 @@ const Board: React.FC = () => {
                                     <span className="entry-likes" >❤️ {entry.likes}</span>
                                 </button>
                             </div>
-                        </div>
+                        </Card>
                     ))}
                     <div ref={bottomDivRef} style={{
                         height: "1px",

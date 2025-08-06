@@ -38,12 +38,30 @@ h1 {
     margin-top: 10px;
 }
 
-.login-container > input {
+.login-id {
   margin: 20px auto 0 auto;
   width: 215px;
   height: 40px;
   border: 1px solid #C3C3C3;
   background: #FFF;
+}
+
+.login-pw {
+  margin: 20px auto 0 auto;
+  width: 215px;
+  height: 40px;
+  border: 1px solid #C3C3C3;
+  background: #FFF;
+  border-radius: 0;
+}
+
+.login-id:hover, .login-pw:hover {
+  border-color: #0C2E87 !important;
+}
+
+.login-pw:focus-within {
+  border-radius: 0 !important;
+  border-color: #0C2E87 !important;
 }
 
 .error-container {
@@ -66,7 +84,7 @@ h1 {
   width: 215px;
   height: 40px;
   border-radius: 4px;
-  background: #0C2E87;
+  background: #0C2E87 !important;
   border: none;
   color: #FFF;
   font-family: Geologica;
@@ -74,6 +92,11 @@ h1 {
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+}
+
+.login:hover {
+  opacity: 80%;
+  transition: opacity 0.2s ease;
 }
 
 .footer {

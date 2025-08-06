@@ -2,6 +2,7 @@ import React, { useState, useEffect }from 'react';
 import { useMovePage } from '../hooks/navigator';
 import { SyncLoader } from "react-spinners";
 import '../styles/Login.css';
+import { Button, Input } from 'antd';
 
 interface VisitorResponse {
   status: string;
@@ -85,8 +86,14 @@ export default function Login () {
     };
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+        handleLogin();
+    }
+  }
+
   return (
-    <div className='wrapper'>
+    <div className='wrapper'onKeyDown={handleKeyDown}>
       <div className='title'>
         <h1>TRINITY PARSER</h1>
         <div className='description'>
@@ -94,16 +101,16 @@ export default function Login () {
         </div>
       </div>
       <div className="login-container">
-          <input 
-            type="text" 
-            name="id" 
+          <Input
+            name="id"
+            className='login-id'
             placeholder="Trintiy ID"
             value={id}
             onChange={(e) => setId(e.target.value)}
           />
-          <input 
-            type="password" 
+          <Input.Password 
             name="password" 
+            className='login-pw'
             placeholder="Trinity Password" 
             value={pw}
             onChange={(e) => setPw(e.target.value)}
@@ -119,7 +126,10 @@ export default function Login () {
       </div>
       
       <div className='button-container'>
-        <button className="login" onClick={handleLogin}>Login</button>
+        <Button className='login' color="default" onClick={handleLogin} variant="solid">
+            Login
+        </Button>
+        {/* <button className="login" onClick={handleLogin}>Login</button> */}
       </div>
       <div className='footer'>
         Developed by: <a href='https://github.com/1876070677'><b>1876070677</b></a>, <a href='https://github.com/KECO-00'><b>KECO-00</b></a><br />

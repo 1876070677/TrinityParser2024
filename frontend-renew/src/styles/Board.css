@@ -82,6 +82,11 @@ textarea {
   color: #000000
 }
 
+.ant-card-body {
+  padding: 3px !important;
+  font-size: 12px;
+}
+
 .Admin-entry {
   font-weight: bold;
 }

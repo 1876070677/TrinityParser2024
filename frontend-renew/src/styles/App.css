@@ -19,12 +19,12 @@ button {
 }
 
 input:focus {
-  border-color: #0C2E87;
+  border-color: #0C2E87 !important;
   outline: none;
   box-shadow: none;
   border-radius: 0;
 }
 
 input {
-  border-radius: 0;
+  border-radius: 0 !important;
 }

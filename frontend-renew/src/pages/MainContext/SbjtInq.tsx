@@ -4,6 +4,7 @@ import '../../styles/Sbjt.css';
 import { useMovePage } from '../../hooks/navigator';
 import { FaRegBookmark, FaBookmark } from "react-icons/fa";
 import { MdOutlineRefresh } from "react-icons/md";
+import { Button, Input } from 'antd';
 
 interface SugangResponse {
     status: string;
@@ -171,12 +172,12 @@ const SbjtInq: React.FC = () => {
             <div className='sbjt-form'>
                 <div className='sbjt-input'>
                     <label>Subject No.</label>
-                    <input type='text' name='sbjtNo' placeholder='과목 코드' value={sbjtNo} 
-                        onChange={(e) => {setSbjtNo(e.target.value)}}/>
+                    <Input className='sbjtNo' placeholder='과목 코드' value={sbjtNo} status={errMsg !== '' ? 'error': ''}
+                        onChange={(e) => {setSbjtNo(e.target.value)}} />
                 </div>
                 <div className='sbjt-input bottom-input'>
                     <label>Class No.</label>
-                    <input type='text' name='classNo' placeholder='분반' value={classNo} 
+                    <Input className='classNo' placeholder='분반' value={classNo} status={errMsg !== '' ? 'error': ''}
                         onChange={(e) => {setClassNo(e.target.value)}}/>
                 </div>
                 <div className="sbjt-error-container">
@@ -188,7 +189,7 @@ const SbjtInq: React.FC = () => {
                 </div>
                 <div className='sbjt-input'>
                     <label></label>
-                    <button className='search' onClick={handleGetSugang}>Search</button>
+                    <Button className='search' onClick={handleGetSugang}>Search</Button>
                 </div>
             </div>
         </div>

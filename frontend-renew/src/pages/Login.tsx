@@ -2,7 +2,8 @@ import React, { useState, useEffect }from 'react';
 import { useMovePage } from '../hooks/navigator';
 import { SyncLoader } from "react-spinners";
 import '../styles/Login.css';
-import { Button, Input } from 'antd';
+import { Button, Input, Statistic, StatisticProps } from 'antd';
+import CountUp from 'react-countup';
 
 interface VisitorResponse {
   status: string;
@@ -59,6 +60,7 @@ export default function Login () {
 
   const handleLogin = async () => {
     try {
+      setErrMsg('');
       const res = await fetch(`/trinity/login`, {
         method: "POST",
         headers: {
@@ -92,12 +94,16 @@ export default function Login () {
     }
   }
 
+  const formatter: StatisticProps['formatter'] = (value) => (
+    <CountUp end={value as number} separator="," />
+  );
+
   return (
     <div className='wrapper'onKeyDown={handleKeyDown}>
       <div className='title'>
         <h1>TRINITY PARSER</h1>
         <div className='description'>
-          <b>{visitor}</b> users have used our service.. <br />
+          <Statistic title="Total Users" value={visitor} formatter={formatter} />
         </div>
       </div>
       <div className="login-container">
@@ -106,14 +112,16 @@ export default function Login () {
             className='login-id'
             placeholder="Trintiy ID"
             value={id}
-            onChange={(e) => setId(e.target.value)}
+            status={errMsg !== '' ? 'error' : ''}
+            onChange={(e) => {setId(e.target.value)}}
           />
           <Input.Password 
             name="password" 
             className='login-pw'
             placeholder="Trinity Password" 
             value={pw}
-            onChange={(e) => setPw(e.target.value)}
+            status={errMsg !== '' ? 'error' : ''}
+            onChange={(e) => {setPw(e.target.value)}}
           />
       </div>
 
@@ -126,7 +134,7 @@ export default function Login () {
       </div>
       
       <div className='button-container'>
-        <Button className='login' color="default" onClick={handleLogin} variant="solid">
+        <Button className='login' color="default" onClick={handleLogin}>
             Login
         </Button>
         {/* <button className="login" onClick={handleLogin}>Login</button> */}

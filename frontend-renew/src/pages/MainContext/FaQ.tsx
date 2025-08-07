@@ -1,25 +1,19 @@
-import { useState } from 'react';
 import { faqs } from '../../Const';
+import { Collapse } from 'antd';
 import '../../styles/FaQ.css';
 
 const FnQ: React.FC = () => {
-    const [openIndex, setOpenIndex] = useState<null | number>(null);
 
-    const toggle = (index: number) => {
-        setOpenIndex((prev) => (prev === index ? null : index));
-    };
+    const items = faqs.map((faq, index) => ({
+        key: String(index),
+        label: faq.question,
+        children: <p>{faq.answer}</p>,
+    }));
 
     return (
         <div className="faq-wrapper">
-            <h3>자주 묻는 질문...</h3>
-            {faqs.map((faq, index) => (
-                <div key={index} className="faq-item" onClick={() => toggle(index)}>
-                        <b className='QA'>Q. </b>{faq.question}
-                    {openIndex === index && (
-                        <div className="faq-answer"><b className='QA'>A. </b>{faq.answer}</div>
-                    )}
-                </div>
-            ))}
+            <h3 style={{ marginBottom: '15px' }}>자주 묻는 질문...</h3>
+            <Collapse accordion items={items} />
         </div>
     )
 }

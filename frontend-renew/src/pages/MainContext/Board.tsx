@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import '../../styles/Board.css';
-import { Card } from "antd";
+import { Button, Card, Flex } from "antd";
+import TextArea from "antd/es/input/TextArea";
 
 interface Response {
     status: string,
@@ -27,7 +28,6 @@ export interface BoardEntry {
 const Board: React.FC = () => {
     const [boardList, setBoardList] = useState<BoardType[]>([]);
     const [inputValue, setInputValue] = useState<string>("");
-    const [records, setRecords] = useState<number>(0);
     const [lastId, setLastId] = useState<string>("0");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [hasMore, setHasMore] = useState<boolean>(false);
@@ -51,9 +51,9 @@ const Board: React.FC = () => {
                 alert(data.message);
             }
 
-            if(records < data.data[0].total_records){
+            if(boardList.length < data.data[0].total_records){
                 setBoardList((prev) => [...prev, ...data.data]);
-                setRecords(data.data.length);
+                // setRecords(data.data[0].total_records);
                 setHasMore(true);
             } else {
                 setHasMore(false);
@@ -61,8 +61,9 @@ const Board: React.FC = () => {
             setIsLoading(false);
 
             if (data.data.length > 0) {
-                setLastId(data.data[data.data.length - 1].id);
-              }
+                setLastId(String(data.data[data.data.length - 1].id));
+                console.log(data.data[data.data.length - 1].id);
+            }
         }catch(err) {
             alert("죄송해요 뭔가 이상하네요, 잠시 다른 창을 봐주세요")
         } finally {
@@ -191,11 +192,13 @@ const Board: React.FC = () => {
     }, []);
     
     useEffect(() => {
+        const target = bottomDivRef.current;
+        if (!target) return;
         const observer = new IntersectionObserver(
             (entries) => {
                 if(entries[0].isIntersecting && !isLoading && hasMore) {
-                    if(lastId == "1"){
-                        observer.disconnect();
+                    if(lastId === '1'){
+                        observer.unobserve(target);
                         setHasMore(false);
                         return;
                     }
@@ -206,32 +209,39 @@ const Board: React.FC = () => {
             { threshold: 1.0 }
         );
 
-        if(bottomDivRef.current) observer.observe(bottomDivRef.current);
+        observer.observe(target);
         
-        return () => observer.disconnect();
+        return () => {
+            if (target) {
+                observer.unobserve(target)
+                observer.disconnect();
+            };
+        }
     }, [lastId, isLoading, hasMore]); 
     
     return (
         <>
             <div className="guestbook-container">
-                <form onSubmit={handleSubmit} className="guestbook-form" >
-                    <div className="guestbook-textarea">
-                        <textarea 
-                            placeholder="내용을 입력하세요..." 
-                            className="guestbook-input"
-                            value={inputValue}
+                <form onSubmit={handleSubmit}>
+                    <Flex wrap gap={30} justify="center" vertical align="center" style={{ padding:'10px' }}>
+                        <TextArea
+                            showCount
                             maxLength={200}
-                            onChange={(e) => setInputValue(e.target.value)} 
+                            onChange={(e) => setInputValue(e.target.value)}
+                            placeholder="내용을 입력하세요..." 
+                            style={{ height: "100px", resize: 'none' }}
+                            allowClear
                         />
-                    </div>
-                    <div className="guestbook-btn">
-                        <button type="submit" className="guestbook-submit-btn">Submit</button>
-                    </div>
+                        <Flex justify="end" wrap style={{ width: '100%' }} >
+                            <Button className='guestbook-submit-btn' color="default" onClick={handleSubmit} >Submit</Button>
+                        </Flex>
+                    </Flex>
                 </form>
                 <div className="entries-container">
                     {boardList.filter((entry) => entry.visible === true).map((entry, index) => (
                         <Card
-                        key={`${entry.id} - ${index}`} className={`entry-card${entry.isAdmin ? ' Admin-entry' : ''}`}>
+                            key={`${entry.id} - ${index}`} className={`entry-card${entry.isAdmin ? ' Admin-entry' : ''}`}
+                        >
                             { entry.isAdmin &&
                                <p>🛡️ 운영진</p>
                             }
@@ -245,7 +255,7 @@ const Board: React.FC = () => {
                         </Card>
                     ))}
                     <div ref={bottomDivRef} style={{
-                        height: "1px",
+                        height: "5px",
                     }} />
                     { !hasMore && <div className="endpage-cmt"><p>마지막 방명록입니다.</p></div>}
                 </div>

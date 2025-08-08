@@ -3,6 +3,7 @@ import { Link} from 'react-router-dom';
 import '../styles/Navbar.css';
 import { Mode } from '../types/Main';
 import { useMovePage } from '../hooks/navigator';
+import { MessageInstance } from 'antd/es/message/interface';
 
 const tabs = [
   {key: 'sbjtInq', value: '수강 인원', path: '/sbjtInq'},
@@ -13,6 +14,7 @@ const tabs = [
 
 interface Prop {
   mode: Mode;
+  messageApi: MessageInstance;
 }
 
 interface LogoutResponse {
@@ -21,7 +23,7 @@ interface LogoutResponse {
   data: null;
 }
 
-const Navbar: React.FC<Prop> = ({ mode }) => {
+const Navbar: React.FC<Prop> = ({ mode, messageApi }) => {
   const movePage = useMovePage();
 
   const handleLogout = async () => {
@@ -36,8 +38,17 @@ const Navbar: React.FC<Prop> = ({ mode }) => {
     const data: LogoutResponse = await res.json();
 
     if(data.status === "OK"){
-      alert("로그아웃 되었습니다.");
+      messageApi.open({
+        type: 'success',
+        content: 'Logged out successfully.',
+      });
       movePage('/');
+    } else {
+        messageApi.open({
+          type: 'error',
+          content: 'Error!!',
+        });
+        movePage('/');
     }
   }
 

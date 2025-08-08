@@ -3,9 +3,11 @@ import Login from './pages/Login';
 import './styles/App.css';
 import Main from './pages/Main';
 import { ConfigProvider } from 'antd';
+import { message } from 'antd';
 
 
 function App() {
+  const [messageApi, contextHolder] = message.useMessage();
 
   return (
     <ConfigProvider
@@ -29,14 +31,15 @@ function App() {
         }
       }}
     >
+      {contextHolder}
       <BrowserRouter basename='/fe'>
         <div className='imgWrapper'><img src='/fe/logo.png'></img></div>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path='/sbjtInq' element={<Main mode="sbjtInq" />} />
-          <Route path='/grade' element={<Main mode="grade" />} />
-          <Route path='/board' element={<Main mode="board" />} />
-          <Route path='/fnq' element={<Main mode="faq" />} />
+          <Route path='/sbjtInq' element={<Main mode="sbjtInq" messageApi={messageApi} />} />
+          <Route path='/grade' element={<Main mode="grade" messageApi={messageApi} />} />
+          <Route path='/board' element={<Main mode="board" messageApi={messageApi} />} />
+          <Route path='/fnq' element={<Main mode="faq" messageApi={messageApi} />} />
           
           {/* 없는 URL 접근 시 /login으로 리디렉션 */}
           <Route path="*" element={<Navigate to ="/" replace />} />

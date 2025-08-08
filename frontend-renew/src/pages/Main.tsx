@@ -7,6 +7,7 @@ import SbjtInq from './MainContext/SbjtInq';
 import Board from './MainContext/Board';
 import Grade from './MainContext/Grade';
 import FnQ from './MainContext/FaQ';
+import { MessageInstance } from 'antd/es/message/interface';
 
 interface authorizeResonse {
   status: string;
@@ -16,9 +17,10 @@ interface authorizeResonse {
 
 interface Prop {
     mode: Mode;
+    messageApi: MessageInstance;
 }
 
-export default function Main ({ mode }: Prop) {
+export default function Main ({ mode, messageApi }: Prop) {
     const movePage = useMovePage();
     let Context;
 
@@ -57,7 +59,7 @@ export default function Main ({ mode }: Prop) {
     })
     return (
     <>
-        <Navbar mode={mode} />
+        <Navbar mode={mode} messageApi={messageApi} />
         {Context ? <Context /> : null}
     </>
     );

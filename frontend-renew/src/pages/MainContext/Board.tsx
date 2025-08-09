@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import '../../styles/Board.css';
-import { Button, Card, Flex } from "antd";
+import { Button, Card, Flex, Skeleton } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { ClockCircleOutlined, GithubOutlined, HeartFilled } from "@ant-design/icons";
+import { MessageInstance } from "antd/es/message/interface";
 
 interface Response {
     status: string,
@@ -25,16 +27,22 @@ export interface BoardEntry {
     data: BoardType[];
 }
 
-const Board: React.FC = () => {
+interface Prop {
+    messageApi: MessageInstance;
+}
+
+const Board: React.FC<Prop> = ({ messageApi }) => {
     const [boardList, setBoardList] = useState<BoardType[]>([]);
     const [inputValue, setInputValue] = useState<string>("");
     const [lastId, setLastId] = useState<string>("0");
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [hasMore, setHasMore] = useState<boolean>(false);
+    const [initialLoading, setInitialLoading] = useState<boolean>(true);
+    const [hasMore, setHasMore] = useState<boolean>(true);
 
     const bottomDivRef = useRef<HTMLDivElement | null>(null);
 
     const getBoard = async (cursor: string) => {
+        setHasMore(false);
         setIsLoading(true);
         try {
             const res = await fetch(`/trinity/auth/vl?cursor=${cursor}`, {
@@ -48,24 +56,27 @@ const Board: React.FC = () => {
 
             const data: BoardEntry = await res.json();
             if(data.status === "Bad Request"){
-                alert(data.message);
+                messageApi.open({
+                    type: 'error',
+                    content: data.message,
+                });
             }
 
             if(boardList.length < data.data[0].total_records){
                 setBoardList((prev) => [...prev, ...data.data]);
-                // setRecords(data.data[0].total_records);
                 setHasMore(true);
             } else {
                 setHasMore(false);
             }
-            setIsLoading(false);
 
             if (data.data.length > 0) {
                 setLastId(String(data.data[data.data.length - 1].id));
-                console.log(data.data[data.data.length - 1].id);
             }
         }catch(err) {
-            alert("죄송해요 뭔가 이상하네요, 잠시 다른 창을 봐주세요")
+            messageApi.open({
+                type: 'error',
+                content: '죄송해요 뭔가 이상하네요, 잠시 다른 창을 봐주세요..',
+            });
         } finally {
             setIsLoading(false);
         }
@@ -74,7 +85,10 @@ const Board: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); // 기본 폼 제출 동작 방지
         if (inputValue.trim() === "") {
-          alert("내용을 입력해주세요!");
+            messageApi.open({
+                type: 'error',
+                content: '내용을 입력해주세요!',
+            });
           return;
         }
 
@@ -92,10 +106,16 @@ const Board: React.FC = () => {
 
             const result: Response = await res.json();
             if(result.status === "Bad Request"){
-                alert(`${result.message}`);
+                messageApi.open({
+                    type: 'error',
+                    content: `${result.message}`,
+                });
             } else {
                 setInputValue(""); // 입력 필드 초기화
-                alert("댓굴이 작성되었습니다.");
+                messageApi.open({
+                    type: 'success',
+                    content: "댓굴이 작성되었습니다.",
+                });
             }
             
             setIsLoading(true);
@@ -110,9 +130,13 @@ const Board: React.FC = () => {
               setIsLoading(false);
               const latestData: BoardEntry = await latestRes.json();
               if (latestData.status === "Bad Request") {
-                alert(latestData.message);
+                messageApi.open({
+                    type: 'error',
+                    content: latestData.message,
+                });
               } else {
                 // 최신 데이터를 기존 목록의 맨 위에 추가
+                setInputValue('');
                 const lastest: BoardType = latestData.data[0];
                 setBoardList((prev) => [lastest, ...prev]);
               }
@@ -127,12 +151,14 @@ const Board: React.FC = () => {
         try {
             const targetEntry = boardList.find((entry) => entry.id === id);
             if(!targetEntry){
-                console.error("해당 댓글을 찾을 수 없습니다.");
                 return;
             }
 
             if(targetEntry.likes  >= 99) {
-                alert("좋아요는 최대 99까지 가능합니다.");
+                messageApi.open({
+                    type: 'error',
+                    content: "좋아요는 최대 99까지 가능합니다.",
+                });
                 return;
             }
             const res = await fetch(`/trinity/auth/vl/likes/${id}`, {
@@ -188,7 +214,11 @@ const Board: React.FC = () => {
     };
 
     useEffect(() => {
+        console.log("initial");
         getBoard(generateRandomString() + btoa(lastId)); // 초기 데이터 로드
+        setTimeout(() => {
+            setInitialLoading(false);
+        }, 400);
     }, []);
     
     useEffect(() => {
@@ -217,13 +247,14 @@ const Board: React.FC = () => {
                 observer.disconnect();
             };
         }
-    }, [lastId, isLoading, hasMore]); 
+    }, [lastId, isLoading, hasMore, initialLoading]); 
     
     return (
         <>
+        {initialLoading ? <Skeleton active title={false} paragraph={{ rows: 4 }} /> :
             <div className="guestbook-container">
                 <form onSubmit={handleSubmit}>
-                    <Flex wrap gap={30} justify="center" vertical align="center" style={{ padding:'10px' }}>
+                    <Flex gap={10} justify="center" align="center" style={{ padding:'10px', marginBottom: '25px' }}>
                         <TextArea
                             showCount
                             maxLength={200}
@@ -232,9 +263,7 @@ const Board: React.FC = () => {
                             style={{ height: "100px", resize: 'none' }}
                             allowClear
                         />
-                        <Flex justify="end" wrap style={{ width: '100%' }} >
-                            <Button className='guestbook-submit-btn' color="default" onClick={handleSubmit} >Submit</Button>
-                        </Flex>
+                        <Button className='guestbook-submit-btn' color="default" onClick={handleSubmit} >Submit</Button>
                     </Flex>
                 </form>
                 <div className="entries-container">
@@ -243,13 +272,13 @@ const Board: React.FC = () => {
                             key={`${entry.id} - ${index}`} className={`entry-card${entry.isAdmin ? ' Admin-entry' : ''}`}
                         >
                             { entry.isAdmin &&
-                               <p>🛡️ 운영진</p>
+                            <p><GithubOutlined /> 운영진</p>
                             }
                             <p className="entry-context">{entry.context}</p>
                             <div className="entry-footer">
-                                <span className="entry-date">{formatCreatedTime(entry.created_time)}</span>
+                                <span className="entry-date"><ClockCircleOutlined /> {formatCreatedTime(entry.created_time)}</span>
                                 <button className="like-btn" onClick={() => handleLike(entry.id)}>
-                                    <span className="entry-likes" >❤️ {entry.likes}</span>
+                                    <span className="entry-likes" ><HeartFilled style={{color: '#ff4d4f'}} /> {entry.likes}</span>
                                 </button>
                             </div>
                         </Card>
@@ -257,9 +286,10 @@ const Board: React.FC = () => {
                     <div ref={bottomDivRef} style={{
                         height: "5px",
                     }} />
-                    { !hasMore && <div className="endpage-cmt"><p>마지막 방명록입니다.</p></div>}
+                    { !hasMore && <div className="endpage-cmt" style={{ fontSize: '12px' }}><p>마지막 방명록입니다.</p></div>}
                 </div>
             </div>
+        }
         </>
     )
 }

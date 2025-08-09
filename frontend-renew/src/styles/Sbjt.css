@@ -6,7 +6,7 @@
     margin: 0 auto;
     align-items: center;
 
-    font-family: Geologica;
+    font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, Arial, sans-serif;
     font-size: 14px;
     font-style: normal;
 }
@@ -41,7 +41,7 @@
     flex: 1;
     width: 156px;
     height: 33px;
-    font-family: Geologica;
+    font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, Arial, sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -55,7 +55,7 @@
     margin: 20px auto 0 auto;
     align-items: center;
 
-    font-family: Geologica;
+    font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, Arial, sans-serif;
     font-size: 12px;
     font-style: normal;
     gap: 8px;
@@ -107,7 +107,7 @@ button {
     margin: 5px auto 5px auto;
   color: #E34850;
   height: 15px;
-  font-family: Geologica;
+  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, Arial, sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import "../../styles/Grade.css";
 import { useMovePage } from '../../hooks/navigator';
 import { SyncLoader } from 'react-spinners';
+import { MessageInstance } from 'antd/es/message/interface';
+import { Skeleton } from 'antd';
 
 interface Grade {
     details: string[];
@@ -21,8 +23,12 @@ interface GradeResponse {
     } | null
 }
 
-const Grade: React.FC = () => {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+interface Prop {
+    messageApi: MessageInstance;
+}
+
+const Grade: React.FC<Prop> = ({ messageApi }) => {
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [grades, setGrades] = useState<Grade[]>([]);
     const [selectedGrade, setSelectedGrade] = useState<Grade | null>(null);
     const [errorMsg, setErrorMsg] = useState<string>('');
@@ -46,14 +52,21 @@ const Grade: React.FC = () => {
 
                 const data: GradeResponse = await res.json();
                 if(data.status === "UNAUTHORIZED"){
-                    alert("로그인이 만료되었습니다.");
+                    messageApi.open({
+                        type: 'error',
+                        content: "로그인이 만료되었습니다.",
+                    });
                     movePage('/');
                 } else if (data.data !== null) {
                     setGrades(data.data.grades);
-                    setIsLoading(false);
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, 400);
                 } else {
                     setErrorMsg("휴학생 또는 졸업생의 경우, 조회가 불가능합니다.")
-                    setIsLoading(false);
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, 400);
                 }
             } catch(err){
                 console.error("Error get Sugang", err);
@@ -61,72 +74,75 @@ const Grade: React.FC = () => {
         }
 
         getGrade();
-        
     }, []);
 
     return (
-        <div className='grade-wrapper'>
-            <h3>이번 학기 성적 조회</h3>
+        <>
+        { isLoading ? <Skeleton title={false} active paragraph={{ rows: 4 }} /> :
+            <div className='grade-wrapper'>
+                <h3>이번 학기 성적 조회</h3>
 
-            <table className="grade-table">
-                {
-                    errorMsg !== ""
-                    ? (<div className='error-wrapper'>{errorMsg}</div>)
-                    : (
-                        isLoading
-                        ? <div style={{textAlign: "center"}}><SyncLoader size={6} color="#0C2E87" /></div>
+                <table className="grade-table">
+                    {
+                        errorMsg !== ""
+                        ? (<div className='error-wrapper'>{errorMsg}</div>)
                         : (
-                            <>
-                                <thead>
-                                    <tr style={{ backgroundColor: "#ffffff", color:"#0C2E87"}}>
-                                        <th><b>과목명</b></th>
-                                        <th><b>성적</b></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {grades.map((grade) => (
-                                        <tr key={grade.sbjtNo} onClick={() => handleGradeClick(grade)}>
-                                            <th>{grade.sbjtKorNm}</th>
-                                            <th>{grade.grdAdm}</th>
+                            isLoading
+                            ? <div style={{textAlign: "center"}}><SyncLoader size={6} color="#0C2E87" /></div>
+                            : (
+                                <>
+                                    <thead>
+                                        <tr style={{ backgroundColor: "#ffffff", color:"#0C2E87"}}>
+                                            <th><b>과목명</b></th>
+                                            <th><b>성적</b></th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </>
+                                    </thead>
+                                    <tbody>
+                                        {grades.map((grade) => (
+                                            <tr key={grade.sbjtNo} onClick={() => handleGradeClick(grade)}>
+                                                <th>{grade.sbjtKorNm}</th>
+                                                <th>{grade.grdAdm}</th>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </>
+                            )
                         )
-                    )
+                    }
+                </table>
+                <p className="description">표에서 조회하고 싶은 과목 혹은 성적 클릭 시, <br/> 해당 과목의 세부 정보를 확인할 수 있습니다.</p>
+                {selectedGrade !== null && selectedGrade && 
+                    <div className='grade-detail-wrapper'>
+                        <h3>Details...</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>총점</th>
+                                    <th>성적</th>
+                                    <th>세부 점수</th>
+                                    <th>평가 여부</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <th>{selectedGrade.centesScorAdm}</th>
+                                <th>{selectedGrade.grdAdm}</th>
+                                <th>
+                                    {selectedGrade.details.map((detail, index) => (
+                                        <>
+                                            <span key={index}>
+                                                세부항목 {index + 1}: {detail}
+                                            </span><br></br>
+                                        </>
+                                    ))}
+                                </th>
+                                <th>{selectedGrade.estiYn}</th>
+                            </tbody>
+                        </table>
+                    </div>
                 }
-            </table>
-            <p className="description">표에서 조회하고 싶은 과목 혹은 성적 클릭 시, <br/> 해당 과목의 세부 정보를 확인할 수 있습니다.</p>
-            {selectedGrade !== null && selectedGrade && 
-                <div className='grade-detail-wrapper'>
-                    <h3>Details...</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>총점</th>
-                                <th>성적</th>
-                                <th>세부 점수</th>
-                                <th>평가 여부</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <th>{selectedGrade.centesScorAdm}</th>
-                            <th>{selectedGrade.grdAdm}</th>
-                            <th>
-                                {selectedGrade.details.map((detail, index) => (
-                                    <>
-                                        <span key={index}>
-                                            세부항목 {index + 1}: {detail}
-                                        </span><br></br>
-                                    </>
-                                ))}
-                            </th>
-                            <th>{selectedGrade.estiYn}</th>
-                        </tbody>
-                    </table>
-                </div>
-            }
-        </div>
+            </div>
+        }
+        </>
     );
 };
 

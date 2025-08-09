@@ -1,7 +1,7 @@
 .grade-wrapper {
     max-width: 360px;
     margin: 20px auto 0 auto;
-    font-family: Geologica;
+    font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, Arial, sans-serif;
     font-size: 14px;
     font-style: normal;
 }

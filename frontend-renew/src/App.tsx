@@ -36,10 +36,7 @@ function App() {
         <div className='imgWrapper'><img src='/fe/logo.png'></img></div>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path='/sbjtInq' element={<Main mode="sbjtInq" messageApi={messageApi} />} />
-          <Route path='/grade' element={<Main mode="grade" messageApi={messageApi} />} />
-          <Route path='/board' element={<Main mode="board" messageApi={messageApi} />} />
-          <Route path='/fnq' element={<Main mode="faq" messageApi={messageApi} />} />
+          <Route path='/main' element={<Main messageApi={messageApi} />} />
           
           {/* 없는 URL 접근 시 /login으로 리디렉션 */}
           <Route path="*" element={<Navigate to ="/" replace />} />

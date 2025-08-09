@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SyncLoader } from "react-spinners";
 import '../../styles/Sbjt.css';
 import { useMovePage } from '../../hooks/navigator';
-import { FaRegBookmark, FaBookmark } from "react-icons/fa";
-import { MdOutlineRefresh } from "react-icons/md";
-import { Button, Input } from 'antd';
+import { Button, Input, Skeleton } from 'antd';
+import { RetweetOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
+import { MessageInstance } from 'antd/es/message/interface';
 
 interface SugangResponse {
     status: string;
@@ -21,10 +21,15 @@ type ResultType = {
     extraCnt: string ;
 }
 
-const SbjtInq: React.FC = () => {
+interface Prop {
+    messageApi: MessageInstance;
+}
+
+const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
     const [sbjtNo, setSbjtNo] = useState<string>('');
     const [classNo, setClassNo] = useState<string>('');
     const [errMsg, setErrMsg] = useState<string>('');
+    const [initialLoading, setInitialLoading] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [results, setResults] = useState<ResultType[]>([]);
     const [currentResult, setCurrentResult] = useState<ResultType | null>(null);
@@ -100,7 +105,54 @@ const SbjtInq: React.FC = () => {
                 }
                 setIsLoading(false);
             } else if(data.status === "UNAUTHORIZED"){
-                alert("로그인이 만료되었습니다.")
+                messageApi.open({
+                    type: 'error',
+                    content: "로그인이 만료되었습니다.",
+                });
+                movePage('/');
+            } else {
+                setErrMsg(data.message);
+                setIsLoading(false);
+            }
+        } catch (err) {
+            console.error("Error get Sugang", err);
+        }
+    }
+
+    const handleCurrentRefresh = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        setErrMsg('');
+        try {
+            const id = e?.currentTarget?.id || "";
+            const [sbjtNo, classNo] = id.split(" ");
+
+            setIsLoading(true);
+            const res = await fetch(`/trinity/auth/sujtInq?sujtNo=${sbjtNo}&classNo=${classNo}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            });
+
+            const data: SugangResponse = await res.json();
+            if(data.status === "OK" && data.data) {
+                const result = {
+                    sbjtNo: sbjtNo,
+                    sbjtKorNm: data.data.sbjtKorNm,
+                    tlsnAplyRcnt: data.data.tlsnAplyRcnt,
+                    tlsnLmtRcnt: data.data.tlsnLmtRcnt,
+                    extraCnt: data.data.extraCnt,
+                    classNo: classNo,
+                }
+                if (result) {
+                    setCurrentResult(result);
+                }
+                setIsLoading(false);
+            } else if(data.status === "UNAUTHORIZED"){
+                messageApi.open({
+                    type: 'error',
+                    content: "로그인이 만료되었습니다.",
+                });
                 movePage('/');
             } else {
                 setErrMsg(data.message);
@@ -155,7 +207,10 @@ const SbjtInq: React.FC = () => {
                 }
                 setIsLoading(false);
             } else if(data.status === "UNAUTHORIZED"){
-                alert("로그인이 만료되었습니다.")
+                messageApi.open({
+                    type: 'error',
+                    content: "로그인이 만료되었습니다.",
+                });
                 movePage('/');
             } else {
                 setErrMsg(data.message);
@@ -166,9 +221,16 @@ const SbjtInq: React.FC = () => {
         }
     }
 
+    useEffect(() => {
+        setTimeout(() => {
+            setInitialLoading(false);
+        }, 400);
+    }, [])
+
     return (
         <>
         <div className='sbjt-container'>
+            { initialLoading ? <Skeleton active title={false} paragraph={{ rows: 4 }} /> :
             <div className='sbjt-form'>
                 <div className='sbjt-input'>
                     <label>Subject No.</label>
@@ -192,36 +254,41 @@ const SbjtInq: React.FC = () => {
                     <Button className='search' onClick={handleGetSugang}>Search</Button>
                 </div>
             </div>
+            }
         </div>
-        <hr className='separator'/>
         <div className='sbjt-results'>
             {/* 현재 조회중인 과목 정보. */}
-            {currentResult !== null ? 
-            <div className='sbjt-result'>
-                <div className='sbjt-result-title'>
-                    <h3>{currentResult.sbjtKorNm}</h3>
+            { isLoading ? <Skeleton active paragraph={{ rows: 3 }} style={{ margin: '0 10px' }}/> :
+                <>
+                {currentResult !== null ? 
+                <div className='sbjt-result'>
+                    <div className='sbjt-result-title'>
+                        <h3>{currentResult.sbjtKorNm}</h3>
+                    </div>
+                    <div className='sbjt-buttons'>
+                        <button onClick={addBookmark}><StarOutlined style={{fontSize: '16px'}} /></button>
+                        <button id={currentResult.sbjtNo !== null ? `${currentResult.sbjtNo} ${currentResult.classNo}`: ''} onClick={(e) => handleCurrentRefresh(e)} ><RetweetOutlined style={{fontSize: '16px'}} /></button>
+                    </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>분반</th>
+                            <th>제한 인원</th>
+                            <th>현재 신청 인원</th>
+                            <th>여석</th>
+                        </tr>
+                        <tr>
+                            <th>{currentResult.classNo}</th>
+                            <th>{currentResult.tlsnLmtRcnt}</th>
+                            <th>{currentResult.tlsnAplyRcnt}</th>
+                            <th>{currentResult.extraCnt}</th>
+                        </tr>
+                        </thead>
+                    </table>
                 </div>
-                <div className='sbjt-buttons'>
-                    <button onClick={addBookmark}><FaRegBookmark size={20}/></button>
-                </div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>분반</th>
-                        <th>제한 인원</th>
-                        <th>현재 신청 인원</th>
-                        <th>여석</th>
-                    </tr>
-                    <tr>
-                        <th>{currentResult.classNo}</th>
-                        <th>{currentResult.tlsnLmtRcnt}</th>
-                        <th>{currentResult.tlsnAplyRcnt}</th>
-                        <th>{currentResult.extraCnt}</th>
-                    </tr>
-                    </thead>
-                </table>
-            </div>
-            : ''}
+                : ''}
+                </>
+            }
 
             {results.map(data => (
                 <div key={data.sbjtNo} className='sbjt-result'>
@@ -229,8 +296,8 @@ const SbjtInq: React.FC = () => {
                         <h3>{data.sbjtKorNm}</h3>
                     </div>
                     <div className='sbjt-buttons'>
-                        <button id={data.sbjtNo !== null ? `${data.sbjtNo} ${data.classNo}`: ''} onClick={(e) => removeBookmark(e)}><FaBookmark size={20}/></button>
-                        <button id={data.sbjtNo !== null ? `${data.sbjtNo} ${data.classNo}`: ''} onClick={(e) => handleRefresh(e)} ><MdOutlineRefresh size={24}/></button>
+                        <button id={data.sbjtNo !== null ? `${data.sbjtNo} ${data.classNo}`: ''} onClick={(e) => removeBookmark(e)}><StarFilled style={{fontSize: '16px'}} /></button>
+                        <button id={data.sbjtNo !== null ? `${data.sbjtNo} ${data.classNo}`: ''} onClick={(e) => handleRefresh(e)} ><RetweetOutlined style={{fontSize: '16px'}} /></button>
                     </div>
                     <table>
                         <thead>

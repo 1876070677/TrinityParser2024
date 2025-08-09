@@ -1,8 +1,12 @@
 .guestbook-container {
   max-width: 360px;
   margin: 20px auto 0 auto;
-  font-family: Geologica;
-  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, Arial, sans-serif;
+  font-size: 100px;
   font-style: normal;
 }
 
@@ -33,7 +37,11 @@ textarea {
 
 .guestbook-submit-btn {
   width: 80px;
-  height: 28px;
+  height: 100px;
+
+  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-style: normal;
 }
 
 .entries-container {
@@ -55,12 +63,14 @@ textarea {
   max-width: 600px;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  color: #000000
+  color: #000000;
+  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, Arial, sans-serif;
+  font-style: normal;
 }
 
 .ant-card-body {
   padding: 3px !important;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .Admin-entry {
@@ -85,12 +95,12 @@ textarea {
 }
 
 .entry-date {
-  font-size: 8px;
+  font-size: 10px;
   color: #666;
 }
 
 .entry-likes {
-  font-size: 8px;
+  font-size: 10px;
   color: #e63946;
 }
 

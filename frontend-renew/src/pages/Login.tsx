@@ -54,9 +54,10 @@ export default function Login () {
       console.error("방문자 수 불러오기에 실패했습니다.");
     }
   }
+
   useEffect (() => {
       checkVisitor();
-  });
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -77,7 +78,7 @@ export default function Login () {
 
       if(data.status === "OK" && data.data){
         setIsLoading(false);
-        movePage('/sbjtInq');
+        movePage('/main');
       } else {
         setIsLoading(false);
         setErrMsg('유효하지 않은 로그인 정보입니다.');

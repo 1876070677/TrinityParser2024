@@ -3,6 +3,10 @@ body {
   padding: 0;
   background-color: #FAFAFA;
   font-size: 14px;
+  /* 익스플로러 스크롤바 옵션 */
+  -ms-overflow-style: none;
+ 	/* 파이어폭스 스크롤바 옵션 */
+  scrollbar-width: none;
 }
 
 img {
@@ -22,4 +26,8 @@ input:focus {
   outline: none;
   box-shadow: none;
   border-radius: 0;
+}
+
+::-webkit-scrollbar {
+	display: none;
 }

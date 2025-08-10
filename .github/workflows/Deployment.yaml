@@ -1,0 +1,29 @@
+# Deployment.yaml
+name: main branch auto ci process script
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: ssh commands
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.REMOTE_PRIVATE_KEY }}
+          port: 22
+          scripts: |
+            cd /home/ubuntu/TrinityParser2024
+            git pull origin main
+            cd /home/ubuntu/TrinityParser2024/frontend-renew
+            npm install
+            npm run build
+            cd /home/ubuntu/TrinityParser2024
+            mvn install
+            docker-compose up -d --build backend

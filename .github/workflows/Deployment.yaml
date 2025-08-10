@@ -17,7 +17,7 @@ jobs:
           host: ${{ secrets.REMOTE_IP }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_PRIVATE_KEY }}
-          port: 22
+          port: ${{ secrets.REMOTE_SSH_PORT }}
           script: |
             cd /home/ubuntu/TrinityParser2024
             git pull origin main
@@ -26,4 +26,5 @@ jobs:
             npm run build
             cd /home/ubuntu/TrinityParser2024
             mvn install
+            chmod -R o+r /home/ubuntu/TrinityParser2024/logs
             docker-compose up -d --build backend

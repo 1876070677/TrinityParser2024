@@ -18,7 +18,7 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_PRIVATE_KEY }}
           port: 22
-          scripts: |
+          script: |
             cd /home/ubuntu/TrinityParser2024
             git pull origin main
             cd /home/ubuntu/TrinityParser2024/frontend-renew

@@ -214,7 +214,6 @@ const Board: React.FC<Prop> = ({ messageApi }) => {
     };
 
     useEffect(() => {
-        console.log("initial");
         getBoard(generateRandomString() + btoa(lastId)); // 초기 데이터 로드
         setTimeout(() => {
             setInitialLoading(false);

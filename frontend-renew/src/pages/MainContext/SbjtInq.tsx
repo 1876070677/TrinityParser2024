@@ -31,6 +31,10 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
     const [errMsg, setErrMsg] = useState<string>('');
     const [initialLoading, setInitialLoading] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const [currentLoading, setCurrentLoading] = useState<boolean>(false);
+    const [bookmarkLoading, setBookmarkLoading] = useState<{sbjtNo: string, classNo: string}>({sbjtNo: '', classNo: ''});
+
     const [results, setResults] = useState<ResultType[]>([]);
     const [currentResult, setCurrentResult] = useState<ResultType | null>(null);
 
@@ -48,7 +52,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
                 if (isDuplicate) {
                     return prev; // 중복이면 추가 안 함
                 }
-                return [...prev, currentResult]; // 중복 아니면 추가
+                return [currentResult, ...prev]; // 중복 아니면 추가
             });
 
             setCurrentResult(null);
@@ -71,6 +75,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
         try {
             const id = e?.currentTarget?.id || "";
             const [sbjtNo, classNo] = id.split(" ");
+            setBookmarkLoading({sbjtNo: sbjtNo, classNo: classNo});
 
             setIsLoading(true);
             const res = await fetch(`/trinity/auth/sujtInq?sujtNo=${sbjtNo}&classNo=${classNo}`, {
@@ -104,6 +109,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
                     });
                 }
                 setIsLoading(false);
+                setBookmarkLoading({sbjtNo: '', classNo: ''});
             } else if(data.status === "UNAUTHORIZED"){
                 messageApi.open({
                     type: 'error',
@@ -113,6 +119,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
             } else {
                 setErrMsg(data.message);
                 setIsLoading(false);
+                setBookmarkLoading({sbjtNo: '', classNo: ''});
             }
         } catch (err) {
             console.error("Error get Sugang", err);
@@ -126,6 +133,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
             const [sbjtNo, classNo] = id.split(" ");
 
             setIsLoading(true);
+            setCurrentLoading(true);
             const res = await fetch(`/trinity/auth/sujtInq?sujtNo=${sbjtNo}&classNo=${classNo}`, {
                 method: "GET",
                 headers: {
@@ -148,6 +156,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
                     setCurrentResult(result);
                 }
                 setIsLoading(false);
+                setCurrentLoading(false);
             } else if(data.status === "UNAUTHORIZED"){
                 messageApi.open({
                     type: 'error',
@@ -157,6 +166,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
             } else {
                 setErrMsg(data.message);
                 setIsLoading(false);
+                setCurrentLoading(false);
             }
         } catch (err) {
             console.error("Error get Sugang", err);
@@ -258,7 +268,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
         </div>
         <div className='sbjt-results'>
             {/* 현재 조회중인 과목 정보. */}
-            { isLoading ? <Skeleton active paragraph={{ rows: 3 }} style={{ margin: '0 10px' }}/> :
+            { isLoading && currentLoading ? <Skeleton active paragraph={{ rows: 3 }} style={{ margin: '0 10px' }}/> :
                 <>
                 {currentResult !== null ? 
                 <div className='sbjt-result'>
@@ -290,8 +300,9 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
                 </>
             }
 
-            {results.map(data => (
-                <div key={data.sbjtNo} className='sbjt-result'>
+            {results.map(data => {
+                return isLoading && bookmarkLoading.sbjtNo === data.sbjtNo && bookmarkLoading.classNo === data.classNo ? <Skeleton active paragraph={{ rows: 3 }} style={{ margin: '0 10px' }}/> : (
+                <div key={`${data.sbjtNo}+${data.classNo}`} className='sbjt-result'>
                     <div className='sbjt-result-title'>
                         <h3>{data.sbjtKorNm}</h3>
                     </div>
@@ -316,7 +327,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
                         </thead>
                     </table>
                 </div>
-            ))}
+            )})}
         </div>
         </>
     );

@@ -1,6 +1,6 @@
 .guestbook-container {
   max-width: 360px;
-  margin: 20px auto 0 auto;
+  margin: 20px auto auto;
   display: flex;
   flex-direction: column;
   justify-content: center;

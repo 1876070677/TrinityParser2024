@@ -4,6 +4,7 @@ import { Button, Card, Flex, Skeleton } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { ClockCircleOutlined, GithubOutlined, HeartFilled } from "@ant-design/icons";
 import { MessageInstance } from "antd/es/message/interface";
+import useFetchUtil from "../../hooks/fetch";
 
 interface Response {
     status: string,
@@ -40,19 +41,13 @@ const Board: React.FC<Prop> = ({ messageApi }) => {
     const [hasMore, setHasMore] = useState<boolean>(true);
 
     const bottomDivRef = useRef<HTMLDivElement | null>(null);
+    const fetchUtil = useFetchUtil();
 
     const getBoard = async (cursor: string) => {
         setHasMore(false);
         setIsLoading(true);
         try {
-            const res = await fetch(`/trinity/auth/vl?cursor=${cursor}`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'mode': 'no-cors'
-                },
-                credentials: 'include',
-            });
+            const res = await fetchUtil('request_get_vl', `/trinity/auth/vl?cursor=${cursor}`, 'GET', null);
 
             const data: BoardEntry = await res.json();
             if(data.status === "Bad Request"){
@@ -93,16 +88,14 @@ const Board: React.FC<Prop> = ({ messageApi }) => {
         }
 
         try {
-            const res = await fetch(`/trinity/auth/vl`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            const res = await fetchUtil(
+                'request_post_vl',
+                `/trinity/auth/vl`,
+                'POST',
+                JSON.stringify({
                     context: inputValue,
-                }),
-                credentials: 'include',
-            });
+                })
+            )
 
             const result: Response = await res.json();
             if(result.status === "Bad Request"){
@@ -119,13 +112,7 @@ const Board: React.FC<Prop> = ({ messageApi }) => {
             }
             
             setIsLoading(true);
-            const latestRes = await fetch(`/trinity/auth/vl?cursor=${generateRandomString()}${btoa("0")}`, {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                credentials: "include",
-              });
+            const latestRes = await fetchUtil('request_get_vl', `/trinity/auth/vl?cursor=${generateRandomString()}${btoa("0")}`, 'GET', null);
               
               setIsLoading(false);
               const latestData: BoardEntry = await latestRes.json();
@@ -161,14 +148,7 @@ const Board: React.FC<Prop> = ({ messageApi }) => {
                 });
                 return;
             }
-            const res = await fetch(`/trinity/auth/vl/likes/${id}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    "mode": "no-cors"
-                },
-                credentials: "include",
-            });
+            const res = await fetchUtil('request_post_like', `/trinity/auth/vl/likes/${id}`, 'PATCH', null);
 
             if(!res) throw new Error("좋아요 요청 실패");
 
@@ -260,6 +240,7 @@ const Board: React.FC<Prop> = ({ messageApi }) => {
                             onChange={(e) => setInputValue(e.target.value)}
                             placeholder="내용을 입력하세요..." 
                             style={{ height: "100px", resize: 'none' }}
+                            value={inputValue}
                             allowClear
                         />
                         <Button className='guestbook-submit-btn' color="default" onClick={handleSubmit} >Submit</Button>

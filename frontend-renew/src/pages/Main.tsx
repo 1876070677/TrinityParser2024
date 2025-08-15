@@ -8,6 +8,7 @@ import FnQ from './MainContext/FaQ';
 import { MessageInstance } from 'antd/es/message/interface';
 import { ConfigProvider, Flex, FloatButton, Tabs } from 'antd';
 import { LoginOutlined, UserOutlined } from '@ant-design/icons';
+import useFetchUtil from '../hooks/fetch';
 
 interface authorizeResonse {
   status: string;
@@ -28,6 +29,7 @@ interface Prop {
 export default function Main ({ messageApi }: Prop) {
     const movePage = useMovePage();
     const [open, setOpen] = useState<boolean>(false);
+    const fetchUtil = useFetchUtil();
 
     const tabsForAntd = [
         {key: 'sbjtInq', label: '수강 인원', children: <SbjtInq messageApi={messageApi} />},
@@ -37,13 +39,7 @@ export default function Main ({ messageApi }: Prop) {
     ]
 
     const handleLogout = async () => {
-        const res = await fetch(`/trinity/logout`, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        });
+        const res = await fetchUtil('request_logout', `/trinity/logout`, 'POST', null);
 
         const data: LogoutResponse = await res.json();
 
@@ -64,13 +60,7 @@ export default function Main ({ messageApi }: Prop) {
 
     const checkLoggedIn = async () => {
         try {
-            const res = await fetch(`/trinity/auth/authorize`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            });
+            const res = await fetchUtil('request_check_login', `/trinity/auth/authorize`, 'GET', null);
 
             const data: authorizeResonse = await res.json();
             if(data.status === "UNAUTHORIZED") {
@@ -79,38 +69,6 @@ export default function Main ({ messageApi }: Prop) {
             }
         } catch (err) {
             console.error("Error get login info", err);
-        }
-    }
-
-    const logout = async () => {
-        const res = await fetch(`/trinity/logout`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-        });
-
-        const data: LogoutResponse = await res.json();
-
-        if(data.status === "OK"){
-            messageApi.open({
-                type: 'success',
-                content: 'Logged out successfully.',
-        });
-        movePage('/');
-        } else {
-            messageApi.open({
-                type: 'error',
-                content: 'Error!!',
-            });
-            movePage('/');
-        }
-    }
-
-    const handleClick = (key: string) => {
-        if (key === 'logout') {
-            logout();
         }
     }
 
@@ -145,7 +103,7 @@ export default function Main ({ messageApi }: Prop) {
             <Tabs style={{ maxWidth: '360px', minWidth: '360px' }}
                 animated={{ tabPane: true }}
                 destroyOnHidden
-                defaultActiveKey='sbjtInq' items={tabsForAntd} onTabClick={handleClick}/>
+                defaultActiveKey='sbjtInq' items={tabsForAntd} />
         </ConfigProvider>
     </Flex>
     </>

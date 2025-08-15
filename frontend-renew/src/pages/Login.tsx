@@ -4,6 +4,7 @@ import { SyncLoader } from "react-spinners";
 import '../styles/Login.css';
 import { Button, Input, Statistic, StatisticProps } from 'antd';
 import CountUp from 'react-countup';
+import useFetchUtil from '../hooks/fetch';
 
 interface VisitorResponse {
   status: string;
@@ -26,6 +27,7 @@ export interface ILoginPageProps {
 
 export default function Login () {
   const movePage = useMovePage();
+  const fetchUtil = useFetchUtil();
 
   const [id, setId] = useState<string>('');
   const [pw, setPw] = useState<string>('');
@@ -38,13 +40,7 @@ export default function Login () {
   const [visitor, setVisitor] = useState<number>(0);
   const checkVisitor = async () => {
     try {
-      const res = await fetch(`/manage/requestCnt`, {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
+      const res = await fetchUtil('request_get_visitor', `/manage/requestCnt`, 'GET', null);
 
       const counter: VisitorResponse = await res.json();
       if(counter.status === "OK"){
@@ -62,17 +58,15 @@ export default function Login () {
   const handleLogin = async () => {
     try {
       setErrMsg('');
-      const res = await fetch(`/trinity/login`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const res = await fetchUtil(
+        'request_login',
+        `/trinity/login`,
+        'POST',
+        JSON.stringify({
           trinityId: id,
           password: pw
-        }),
-        credentials: 'include',
-      });
+        })
+      )
 
       const data: Response = await res.json();
 

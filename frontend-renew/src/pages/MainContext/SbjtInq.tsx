@@ -5,6 +5,7 @@ import { useMovePage } from '../../hooks/navigator';
 import { Button, Input, Skeleton } from 'antd';
 import { RetweetOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
 import { MessageInstance } from 'antd/es/message/interface';
+import useFetchUtil from '../../hooks/fetch';
 
 interface SugangResponse {
     status: string;
@@ -39,6 +40,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
     const [currentResult, setCurrentResult] = useState<ResultType | null>(null);
 
     const movePage = useMovePage();
+    const fetchUtil = useFetchUtil();
 
     const addBookmark = () => {
         if (currentResult) {
@@ -78,13 +80,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
             setBookmarkLoading({sbjtNo: sbjtNo, classNo: classNo});
 
             setIsLoading(true);
-            const res = await fetch(`/trinity/auth/sujtInq?sujtNo=${sbjtNo}&classNo=${classNo}`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            });
+            const res = await fetchUtil('request_update_subject_info', `/trinity/auth/sujtInq?sujtNo=${sbjtNo}&classNo=${classNo}`, 'GET', null);
 
             const data: SugangResponse = await res.json();
             if(data.status === "OK" && data.data) {
@@ -134,13 +130,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
 
             setIsLoading(true);
             setCurrentLoading(true);
-            const res = await fetch(`/trinity/auth/sujtInq?sujtNo=${sbjtNo}&classNo=${classNo}`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            });
+            const res = await fetchUtil('request_update_current_subject_info', `/trinity/auth/sujtInq?sujtNo=${sbjtNo}&classNo=${classNo}`, 'GET', null);
 
             const data: SugangResponse = await res.json();
             if(data.status === "OK" && data.data) {
@@ -194,13 +184,7 @@ const SbjtInq: React.FC<Prop> = ({ messageApi }) => {
             }
 
             setIsLoading(true);
-            const res = await fetch(`/trinity/auth/sujtInq?sujtNo=${sbjtNo}&classNo=${classNo}`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            });
+            const res = await fetchUtil('request_get_subject_info',`/trinity/auth/sujtInq?sujtNo=${sbjtNo}&classNo=${classNo}`, 'GET', null);
 
             const data: SugangResponse = await res.json();
             if(data.status === "OK" && data.data) {

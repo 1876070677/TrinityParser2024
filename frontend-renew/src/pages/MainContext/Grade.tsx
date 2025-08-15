@@ -5,6 +5,7 @@ import { useMovePage } from '../../hooks/navigator';
 import { SyncLoader } from 'react-spinners';
 import { MessageInstance } from 'antd/es/message/interface';
 import { Skeleton } from 'antd';
+import useFetchUtil from '../../hooks/fetch';
 
 interface Grade {
     details: string[];
@@ -33,6 +34,7 @@ const Grade: React.FC<Prop> = ({ messageApi }) => {
     const [selectedGrade, setSelectedGrade] = useState<Grade | null>(null);
     const [errorMsg, setErrorMsg] = useState<string>('');
     const movePage = useMovePage();
+    const fetchUtil = useFetchUtil();
 
     const handleGradeClick = (grade: Grade) => {
         setSelectedGrade(grade);
@@ -42,14 +44,8 @@ const Grade: React.FC<Prop> = ({ messageApi }) => {
         const getGrade = async () => {
             setIsLoading(true);
             try{
-                const res = await fetch(`/trinity/auth/grade`, {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                });
-
+                const res = await fetchUtil('request_get_grade', `/trinity/auth/grade`, 'GET', null);
+                
                 const data: GradeResponse = await res.json();
                 if(data.status === "UNAUTHORIZED"){
                     messageApi.open({
@@ -85,7 +81,7 @@ const Grade: React.FC<Prop> = ({ messageApi }) => {
                 <table className="grade-table">
                     {
                         errorMsg !== ""
-                        ? (<div className='error-wrapper'>{errorMsg}</div>)
+                        ? (<tbody><tr><td className='error-wrapper'>{errorMsg}</td></tr></tbody>)
                         : (
                             isLoading
                             ? <div style={{textAlign: "center"}}><SyncLoader size={6} color="#0C2E87" /></div>

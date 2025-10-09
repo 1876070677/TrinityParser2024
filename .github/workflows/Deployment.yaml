@@ -19,11 +19,11 @@ jobs:
           key: ${{ secrets.REMOTE_PRIVATE_KEY }}
           port: ${{ secrets.REMOTE_SSH_PORT }}
           script: |
-            cd /home/ubuntu/TrinityParser2024
+            REMOTE_USER="${{ secrets.REMOTE_USER }}"
+            cd /home/REMOTE_USER/TrinityParser2024
             git pull origin main
-            cd /home/ubuntu/TrinityParser2024/frontend-renew
-            npm install
-            npm run build
-            cd /home/ubuntu/TrinityParser2024
+            cd /home/REMOTE_USER/TrinityParser2024/frontend-renew
+            ./autoBuild.sh
+            cd /home/REMOTE_USER/TrinityParser2024
             mvn install
             sudo docker-compose up -d --build backend

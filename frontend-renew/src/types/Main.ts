@@ -1,1 +1,0 @@
-export type Mode = 'sbjtInq' | 'grade' | 'board' | 'faq';

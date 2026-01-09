@@ -1,3 +1,6 @@
 [submodule "trinity-parser-be"]
 	path = trinity-parser-be
 	url = https://github.com/1876070677/trinity-parser-be.git
+[submodule "trinity-parser-fe"]
+	path = trinity-parser-fe
+	url = https://github.com/1876070677/trinity-parser-fe
